@@ -1,0 +1,52 @@
+# Configuração local do Supabase
+# Copie este arquivo para .env e preencha com suas credenciais
+
+# Core config
+api.port = 54321
+api.schemas = ["public", "storage", "graphql_public"]
+api.extra_search_path = ["public", "extensions"]
+api.max_rows = 1000
+
+# Database config
+db.port = 54322
+db.shadow_port = 54320
+db.major_version = 15
+
+# Studio config
+studio.port = 54323
+
+# Inbucket config (dev only)
+inbucket.port = 54324
+inbucket.smtp_port = 54325
+inbucket.pop3_port = 54326
+
+# Storage config
+storage.port = 54327
+storage.image_transformation.enabled = true
+
+# Edge functions config
+functions.port = 54328
+
+# Auth config
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://gasrapido.com"]
+jwt_expiry = 3600
+enable_signup = true
+email_confirm = false
+email_double_confirm_changes = true
+enable_anonymous_users = false
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+
+[auth.sms]
+enable_signup = true
+enable_confirmations = false
+
+# Analytics config
+[analytics]
+enabled = false

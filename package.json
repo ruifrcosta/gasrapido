@@ -1,0 +1,35 @@
+{
+  "name": "gasrapido-monorepo",
+  "version": "1.0.0",
+  "description": "Marketplace e plataforma logística para entrega segura e rápida de botijas de gás em Luanda",
+  "private": true,
+  "workspaces": [
+    "apps/mobile",
+    "apps/web",
+    "packages/shared",
+    "packages/ui"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "mobile:dev": "npm run dev --workspace=apps/mobile",
+    "web:dev": "npm run dev --workspace=apps/web",
+    "mobile:build": "npm run build --workspace=apps/mobile",
+    "web:build": "npm run build --workspace=apps/web"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.16",
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.2",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3"
+  },
+  "packageManager": "npm@9.8.1",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
