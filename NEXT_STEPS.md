@@ -39,6 +39,17 @@
 - Hook de autenticação
 - Tipagem TypeScript completa
 
+### 7. **Funcionalidades Core para Clientes** ✅
+- [x] Fluxo completo de pedidos
+- [x] Tela de criação de pedidos
+- [x] Tela de rastreamento de pedidos
+- [x] Integração com serviço de pedidos
+- [ ] Integração com mapas (localização)
+- [ ] Sistema de pagamentos
+- [ ] Notificações push
+- [ ] Histórico de pedidos
+- [ ] Sistema de avaliações
+
 ---
 
 ## 🚧 Próximos Passos para Desenvolvimento
@@ -85,10 +96,12 @@ npm run mobile:dev # App mobile
 ### **FASE 2 - Implementações Pendentes**
 
 #### 📱 **Funcionalidades Core para Clientes**
-- [ ] Fluxo completo de pedidos
+- [x] Fluxo completo de pedidos
+- [x] Tela de criação de pedidos
+- [x] Tela de rastreamento de pedidos
+- [x] Integração com serviço de pedidos
 - [ ] Integração com mapas (localização)
 - [ ] Sistema de pagamentos
-- [ ] Rastreamento em tempo real
 - [ ] Notificações push
 - [ ] Histórico de pedidos
 - [ ] Sistema de avaliações
@@ -211,10 +224,10 @@ npm run mobile:dev # App mobile
 
 ### **ALTA PRIORIDADE**
 1. **MVP Básico** (Semana 1-2)
-   - Autenticação funcional
-   - Criar pedido simples
-   - Visualizar pedidos
-   - Dashboard básico
+   - [x] Autenticação funcional
+   - [x] Criar pedido simples
+   - [x] Visualizar pedidos
+   - [ ] Dashboard básico
 
 ### **MÉDIA PRIORIDADE**
 2. **Core Features** (Semana 3-4)

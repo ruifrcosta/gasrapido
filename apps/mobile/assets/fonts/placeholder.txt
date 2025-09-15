@@ -1,0 +1,2 @@
+Este é um arquivo placeholder para o diretório de fontes.
+Substitua este arquivo com as fontes reais da aplicação.

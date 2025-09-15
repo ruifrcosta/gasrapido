@@ -1,0 +1,2 @@
+Este é um arquivo placeholder para o diretório de imagens.
+Substitua este arquivo com as imagens reais da aplicação.

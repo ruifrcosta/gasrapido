@@ -65,8 +65,8 @@ export const ROLE_PERMISSIONS = {
 
 // Helper function to check if user has permission
 export function hasPermission(userRole: string, permission: string): boolean {
-  const rolePermissions = ROLE_PERMISSIONS[userRole as keyof typeof ROLE_PERMISSIONS];
-  return rolePermissions?.includes(permission as any) || false;
+  const rolePermissions = ROLE_PERMISSIONS[userRole as keyof typeof ROLE_PERMISSIONS] as readonly string[];
+  return rolePermissions?.includes(permission) || false;
 }
 
 // Helper function to check if user has any of the permissions

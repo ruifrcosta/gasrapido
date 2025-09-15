@@ -1,0 +1,61 @@
+{
+  "assets": {
+    "icons": {
+      "source": "Icons8",
+      "categories": [
+        "Entrega",
+        "Localização/Mapas",
+        "Pagamento",
+        "Clima",
+        "Segurança",
+        "Utilizador"
+      ],
+      "formats": ["SVG", "PNG"],
+      "storage": "assets/icons/"
+    },
+    "illustrations": {
+      "source": "DrawKit",
+      "style": "Flat minimal, Clean, Illustrations for tech/startup",
+      "formats": ["SVG", "PNG"],
+      "storage": "assets/illustrations/"
+    },
+    "fonts": {
+      "sources": [
+        "Google Fonts"
+      ],
+      "requiredFonts": [
+        {
+          "name": "Inter",
+          "weights": ["400", "500", "700"],
+          "storage": "assets/fonts/"
+        },
+        {
+          "name": "Poppins",
+          "weights": ["400", "600"],
+          "storage": "assets/fonts/"
+        }
+      ]
+    },
+    "logos": {
+      "folders": [
+        "assets/logo/wordmark/",
+        "assets/logo/symbol/"
+      ],
+      "formats": ["SVG"],
+      "status": "Pendente de criação"
+    }
+  },
+  "downloadExecution": {
+    "validation": [
+      "Verificar integridade dos ficheiros",
+      "Confirmar consistência entre web e mobile",
+      "Documentar paths para integração futura"
+    ],
+    "finalFolders": {
+      "icons": "assets/icons/",
+      "illustrations": "assets/illustrations/",
+      "fonts": "assets/fonts/",
+      "logos": "assets/logo/"
+    }
+  }
+}

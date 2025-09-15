@@ -1,3 +1,4 @@
+/// <reference path="../deno.d.ts" />
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -6,7 +7,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -55,7 +56,7 @@ serve(async (req) => {
       throw new Error(`Failed to create payment: ${paymentError.message}`)
     }
 
-    let paymentResult = { success: false, transactionId: null }
+    let paymentResult: { success: boolean; transactionId: string | null } = { success: false, transactionId: null }
 
     // Process payment based on method
     switch (paymentMethod) {
@@ -109,11 +110,11 @@ serve(async (req) => {
       },
     )
 
-  } catch (error) {
+  } catch (error: any) {
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: error.message 
+        error: error?.message || 'An error occurred'
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

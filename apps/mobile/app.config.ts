@@ -1,7 +1,26 @@
-import { ExpoConfig, ConfigContext } from 'expo/config';
+// Configuração do Expo para GasRápido
+type ExpoConfig = {
+  name: string;
+  slug: string;
+  version: string;
+  orientation: string;
+  icon: string;
+  userInterfaceStyle: string;
+  splash: {
+    image: string;
+    resizeMode: string;
+    backgroundColor: string;
+  };
+  assetBundlePatterns: string[];
+  ios: any;
+  android: any;
+  web: any;
+  plugins: any[];
+  scheme: string;
+  extra: any;
+};
 
-export default ({ config }: ConfigContext): ExpoConfig => ({
-  ...config,
+export default (): ExpoConfig => ({
   name: 'GasRápido',
   slug: 'gasrapido',
   version: '1.0.0',
@@ -72,5 +91,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     eas: {
       projectId: 'your-project-id-here',
     },
+    supabaseUrl: 'YOUR_SUPABASE_URL',
+    supabaseAnonKey: 'YOUR_SUPABASE_ANON_KEY',
   },
 });

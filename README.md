@@ -23,6 +23,45 @@ gasrapido/
 └── supabase/            # Database schema e edge functions
 ```
 
+## 🎨 Design System
+
+O GasRápido utiliza um design system customizado para garantir consistência visual e experiência de usuário em todas as plataformas.
+
+### Componentes Disponíveis
+
+- **Button**: Botões com variantes primary, secondary, outline e ghost
+- **Input**: Campos de entrada com suporte a labels, mensagens de erro e ajuda
+- **Card**: Componente de card com cabeçalho, conteúdo e rodapé
+- **Badge**: Indicadores visuais com diferentes variantes
+- **Form**: Componentes para construção de formulários estruturados
+- **Navbar**: Barra de navegação responsiva
+- **Footer**: Rodapé com layout em grid
+
+### Cores Principais
+
+- **Primary**: Azul (#1F3A93)
+- **Accent**: Amarelo (#FFB400)
+- **Neutras**: Escala de cinzas para textos e backgrounds
+
+### Tipografia
+
+- **Fonte**: Inter (system-ui, sans-serif)
+- **Hierarquia**: H1-H3 para cabeçalhos, textos grandes, médios e pequenos
+
+Para visualizar todos os componentes, acesse `/design-system` na aplicação web.
+
+## 🔄 Fluxo de Pedido
+
+O GasRápido implementa um fluxo de pedido completo com validações em cada etapa:
+
+1. **Pedido do Cliente**: Seleção de botija, quantidade e endereço
+2. **Confirmação de Disponibilidade**: Checklist do fornecedor com validações
+3. **Despacho e Entrega**: Rastreamento GPS e roteamento otimizado
+4. **Validação de Conformidade**: Checklist do cliente na entrega
+5. **Certificação Final**: Compilação de evidências e geração de certificado
+
+Para detalhes completos, veja [pedido-fluxo.md](docs/pedido-fluxo.md)
+
 ## 🚀 Stack Tecnológico
 
 ### Frontend
@@ -62,6 +101,25 @@ gasrapido/
 - Node.js 18+
 - npm 9+
 - Conta Supabase configurada
+
+### Configuração de Variáveis de Ambiente
+
+Antes de executar o projeto, configure as variáveis de ambiente:
+
+1. **Mobile App**:
+   - Edite `apps/mobile/app.config.ts` e substitua:
+     - `YOUR_SUPABASE_URL` pela URL do seu projeto Supabase
+     - `YOUR_SUPABASE_ANON_KEY` pela chave anônima do seu projeto Supabase
+
+2. **Web Dashboard**:
+   - Crie `apps/web/.env` com:
+     ```
+     NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+     NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+     ```
+
+3. **Backend Supabase**:
+   - Configure `supabase/.env` com suas credenciais
 
 ### Instalação
 ```bash

@@ -49,7 +49,7 @@ export function AuthProvider({ children, supabaseUrl, supabaseKey }: AuthProvide
 
     // Listen for auth changes
     const { data: { subscription } } = authService.onAuthStateChange(
-      async (event, session) => {
+      async (event: string, session: any) => {
         if (session?.user) {
           setUser(session.user);
           await loadProfile(session.user.id);

@@ -8,8 +8,17 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacing, Typography, BorderRadius, Shadows } from '../utils/theme';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-export default function OrdersScreen() {
+interface OrdersScreenProps {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+export default function OrdersScreen({ navigation }: OrdersScreenProps) {
+  const handleTrackOrder = (orderId: string) => {
+    navigation.navigate('TrackOrder', { orderId });
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -32,7 +41,10 @@ export default function OrdersScreen() {
           </View>
 
           <View style={styles.orderActions}>
-            <TouchableOpacity style={styles.trackButton}>
+            <TouchableOpacity 
+              style={styles.trackButton}
+              onPress={() => handleTrackOrder(order.id)}
+            >
               <Ionicons name="location" size={16} color={Colors.primary} />
               <Text style={styles.trackButtonText}>Rastrear</Text>
             </TouchableOpacity>

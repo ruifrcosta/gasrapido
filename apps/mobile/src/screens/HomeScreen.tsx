@@ -10,13 +10,17 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacing, Typography, BorderRadius, Shadows } from '../utils/theme';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
-export default function HomeScreen() {
+interface HomeScreenProps {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+export default function HomeScreen({ navigation }: HomeScreenProps) {
   const handleOrderGas = () => {
-    // TODO: Navigate to order flow
-    console.log('Pedir gás');
+    navigation.navigate('OrderGas');
   };
 
   const handleEmergencyOrder = () => {

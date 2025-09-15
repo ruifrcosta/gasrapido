@@ -1,0 +1,2 @@
+Este é um arquivo placeholder para o diretório de ícones.
+Substitua este arquivo com os ícones reais da aplicação.

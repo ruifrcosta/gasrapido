@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 
 // Screens
@@ -8,18 +9,55 @@ import HomeScreen from './screens/HomeScreen';
 import OrdersScreen from './screens/OrdersScreen';
 import WalletScreen from './screens/WalletScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import OrderGasScreen from './screens/OrderGasScreen';
+import TrackOrderScreen from './screens/TrackOrderScreen';
 
 // Theme
 import { Colors } from './utils/theme';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+function HomeStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="HomeMain" 
+        component={HomeScreen}
+        options={{ title: 'Início' }}
+      />
+      <Stack.Screen 
+        name="OrderGas" 
+        component={OrderGasScreen}
+        options={{ title: 'Pedir Gás' }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function OrdersStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="OrdersMain" 
+        component={OrdersScreen}
+        options={{ title: 'Meus Pedidos' }}
+      />
+      <Stack.Screen 
+        name="TrackOrder" 
+        component={TrackOrderScreen}
+        options={{ title: 'Rastrear Pedido' }}
+      />
+    </Stack.Navigator>
+  );
+}
 
 export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
+        screenOptions={({ route }: { route: any }) => ({
+          tabBarIcon: ({ focused, color, size }: { focused: boolean; color: string; size: number }) => {
             let iconName: keyof typeof Ionicons.glyphMap;
 
             if (route.name === 'Home') {
@@ -57,12 +95,12 @@ export default function App() {
       >
         <Tab.Screen 
           name="Home" 
-          component={HomeScreen}
+          component={HomeStack}
           options={{ title: 'Início' }}
         />
         <Tab.Screen 
           name="Pedidos" 
-          component={OrdersScreen}
+          component={OrdersStack}
           options={{ title: 'Pedidos' }}
         />
         <Tab.Screen 
