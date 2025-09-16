@@ -1,68 +1,178 @@
-# Task: Implementar Certificação Final de Entregas
+# GasRápido - Lista de Tarefas
 
-## Description
-Implementar o sistema de certificação final de entregas com captura segura de evidências, incluindo fotos, localização GPS e timestamp. O sistema deve encriptar as evidências usando AES-256 e armazená-las de forma segura no Supabase Storage.
+## Tarefas Concluídas
 
-## Complexity
-Level: 3
-Type: Intermediate Feature
+### Infraestrutura e Configuração
+- [x] Configurar estrutura de projeto monorepo com workspaces
+- [x] Configurar aplicação mobile PWA (React Native + Capacitor)
+- [x] Configurar aplicação web PWA (Next.js)
+- [x] Configurar Supabase backend e database schema
+- [x] Configurar integrações (mapas, pagamentos, notificações)
+- [x] Configurar CI/CD e deploy
 
-## Technology Stack
-- Framework: React Native (mobile), Supabase (backend)
-- Build Tool: Expo (mobile), Vercel (web)
-- Language: TypeScript
-- Storage: Supabase Storage with encryption
+### Sistema de Autenticação e UI
+- [x] Implementar sistema de autenticação e RBAC
+- [x] Criar componentes UI e design system
+- [x] Implementar design system unificado para todas as plataformas
+- [x] Criar componentes UI responsivos e acessíveis para desktop, tablet e mobile
 
-## Technology Validation Checkpoints
-- [x] Project initialization command verified
-- [x] Required dependencies identified and installed
-- [x] Build configuration validated
-- [x] Hello world verification completed
-- [x] Test build passes successfully
+### Funcionalidades Core
+- [x] Implementar funcionalidades core para clientes - Fluxo completo de pedidos
+- [x] Criar tela de criação de pedidos
+- [x] Criar tela de rastreamento de pedidos
+- [x] Implementar dashboard para fornecedores
+- [x] Implementar sistema de entregas para couriers
+- [x] Criar sistema de certificação final com armazenamento seguro de evidências
 
-## Status
-- [x] Initialization complete
-- [x] Planning complete
-- [x] Technology validation complete
-- [x] Implementation steps
+### Páginas e Conteúdo
+- [x] Criar páginas de inscrição para clientes, entregadores e fornecedores
+- [x] Implementar formulários de contato e newsletter
+- [x] Adicionar animações e transições na landing page
 
-## Implementation Plan
-1. Criar componente de captura de evidências
-   - [x] Implementar EvidenceCaptureComponent.tsx com captura de fotos
-   - [x] Adicionar obtenção de localização GPS
-   - [x] Implementar interface de usuário para captura
+### Assets e Documentação
+- [x] Pesquisar e descarregar ícones relevantes no Icons8
+- [x] Descarregar ilustrações minimalistas do DrawKit
+- [x] Fazer download e aplicar fonts do design system (Inter e Poppins)
+- [x] Validar se os logos existem e estão corretos
+- [x] Executar downloads e organizar assets em pastas estruturadas
+- [x] Criar documentação JSON dos assets descarregados
+- [x] Criar documentação Markdown (assets.md) dos assets
 
-2. Implementar serviço de certificação
-   - [x] Criar certificationService.ts com encriptação AES-256
-   - [x] Adicionar métodos para captura e validação de evidências
-   - [x] Integrar com secureStorageService.ts
+### APIs e Integrações
+- [x] Pesquisar APIs gratuitas e confiáveis para autenticação, geolocalização, notificações, pagamentos, clima, comunicação, monitorização e armazenamento
+- [x] Selecionar APIs mais adequadas ao fluxo do GasRápido com base em critérios de segurança, limites gratuitos, relevância e possibilidade de upgrade
+- [x] Gerar ficheiro .env com placeholders para todas as APIs necessárias, separadas por categorias
 
-3. Implementar serviço de armazenamento seguro
-   - [x] Criar secureStorageService.ts para Supabase Storage
-   - [x] Adicionar métodos para armazenar e recuperar arquivos encriptados
-   - [x] Implementar verificações de permissões e segurança
+### Segurança e Compliance
+- [x] Implementar autenticação multifator para entregadores e fornecedores
+- [x] Desenvolver sistema de carregamento assíncrono para mapas, imagens e dados em tempo real
+- [x] Criar estrutura modular para futura integração de seguros e marketplace de produtos relacionados
+- [x] Implementar containerização de microserviços
+- [x] Configurar gestão segura de secrets e credenciais
+- [x] Implementar logging de segurança e monitoramento com detecção de anomalias
+- [x] Configurar backup automático encriptado e redundância multi-região
 
-4. Criar tela de certificação final
-   - [x] Implementar FinalCertificationScreen.tsx
-   - [x] Integrar com EvidenceCaptureComponent
-   - [x] Conectar com certificationService para certificação final
+### Sistemas de Gestão
+- [x] Desenvolver sistema de ticketing com classificação automática por IA e workflow definido
+- [x] Integrar agentes de IA especializados (DeepSeek, Customer Support, Backoffice, User Assist)
+- [x] Implementar motor de inteligência para tomada de decisões, detecção de fraudes e manutenção preditiva
+- [x] Desenvolver motor de precificação dinâmica baseado em escassez, clima, tráfego e demanda
+- [x] Criar sistema de matching e roteamento de pedidos com fallback automático entre células
 
-5. Testes e validação
-   - [x] Testar captura de evidências em dispositivo real
-   - [x] Validar encriptação e armazenamento seguro
-   - [x] Verificar integridade das evidências recuperadas
+## Tarefas em Progresso
 
-## Creative Phases Required
-- [x] UI/UX Design para EvidenceCaptureComponent
-- [x] Architecture Design para serviços de certificação e armazenamento
+### Motor de Inteligência
+- [x] Implementar motor de inteligência para tomada de decisões, detecção de fraudes e manutenção preditiva
+  - [x] Criar serviço do motor de inteligência
+  - [x] Implementar componente de gestão do motor de inteligência
+  - [x] Criar tela de demonstração para gestão do motor de inteligência
+  - [x] Integrar com sistema de navegação da aplicação
+  - [x] Documentar o motor de inteligência
+  - [x] Atualizar README com informações sobre o motor de inteligência
 
-## Dependencies
-- Expo Camera e Location modules
-- Supabase client
-- Crypto-JS para encriptação
-- React Navigation
+### Sistema de Alertas e Notificações
+- [x] Criar sistema de alertas e notificações para escassez, SLA e preços
+  - [x] Desenvolver serviço de alertas
+  - [x] Implementar componentes de notificação
+  - [x] Criar tela de gestão de alertas
+  - [ ] Integrar com sistema de notificações existente
 
-## Challenges & Mitigations
-- Gerenciamento de permissões de câmera e localização: Implementar solicitações adequadas de permissões
-- Encriptação segura dos dados: Utilizar biblioteca Crypto-JS com chaves gerenciadas adequadamente
-- Armazenamento confiável das evidências: Usar Supabase Storage com políticas de segurança apropriadas
+## Próximas Tarefas
+
+### Controles Administrativos
+- [ ] Criar controles de override manual e políticas administrativas
+  - [ ] Implementar interface de administração
+  - [ ] Criar mecanismos de controle manual
+  - [ ] Desenvolver políticas de governança
+
+### Transparência de Preços
+- [ ] Implementar transparência na comunicação com clientes sobre preços dinâmicos
+  - [ ] Criar componentes de explicação de preços
+  - [ ] Implementar histórico de preços
+  - [ ] Desenvolver comunicação clara de valores
+
+### Testes e Simulação
+- [ ] Desenvolver sistema de testes e simulação para o motor de precificação
+  - [ ] Criar ambiente de testes
+  - [ ] Implementar simulações de cenários
+  - [ ] Desenvolver métricas de avaliação
+
+### Dashboards e Métricas
+- [ ] Criar dashboards e métricas de monitoramento para admin, ops e finanças
+  - [ ] Desenvolver dashboard administrativo
+  - [ ] Criar painéis para operações
+  - [ ] Implementar métricas financeiras
+
+### Segurança e Compliance
+- [ ] Implementar segurança e compliance para dados sensíveis e auditoria
+  - [ ] Reforçar encriptação de dados
+  - [ ] Implementar auditoria avançada
+  - [ ] Desenvolver controles de compliance
+
+### Integrações
+- [ ] Integrar com Supabase, APIs externas e ML models
+  - [ ] Otimizar integrações existentes
+  - [ ] Adicionar novas APIs
+  - [ ] Melhorar modelos de machine learning
+
+### Playbooks Operacionais
+- [ ] Desenvolver playbooks operacionais para falhas de células e picos de preço
+  - [ ] Criar procedimentos para falhas
+  - [ ] Desenvolver estratégias para picos de demanda
+  - [ ] Implementar planos de contingência
+
+### Portal Administrativo
+- [ ] Implementar portal administrativo para gestão de utilizadores com funções, bloqueio, auditoria e controlos rigorosos
+- [ ] Criar sistema de roles e tiers (super_admin, org_admin, ops_admin, finance_admin, dev_admin) com separação de funções
+- [ ] Implementar workflow de criação e onboarding de utilizadores com aprovações automáticas e manuais
+- [ ] Desenvolver mecanismos de acesso temporal e JIT (Just-In-Time) com expiração automática
+- [ ] Criar sistema de logging de auditoria imutável com registo de todas as ações administrativas
+- [ ] Implementar integração com Supabase e políticas RLS para controlo de acesso
+- [ ] Desenvolver endpoints API e edge functions para gestão de utilizadores
+- [ ] Criar interface de utilizador para o portal administrativo com filas de aprovação e gestão de roles
+- [ ] Implementar controlos de segurança como MFA, device trust e restrições de rede
+- [ ] Desenvolver processos operacionais e playbooks para onboarding e incidentes
+
+### Sistema de Registo
+- [ ] Implementar fluxo de registo baseado em telas únicas e condicionais
+- [ ] Criar tela S00_welcome com opções de registo cliente e entrada por convite
+- [ ] Implementar fluxo de registo de cliente (S10-S13) com validação OTP e endereço
+- [ ] Criar fluxo de registo por convite (S20-S24) para fornecedores e entregadores
+- [ ] Implementar sistema de tokens de convite com validação e segurança
+- [ ] Desenvolver backend com tabelas invites, justifications, user_docs, verification_requests
+- [ ] Criar edge functions para geração e validação de convites
+- [ ] Implementar admin portal para criação e gestão de convites
+- [ ] Desenvolver sistema de verificação de documentos e aprovação
+- [ ] Criar notificações e templates para convites e status
+
+### Infraestrutura
+- [ ] Configurar projeto Supabase para ambientes dev/staging/prod
+- [ ] Criar migrations iniciais do banco de dados com tabelas core
+- [ ] Configurar políticas RLS (Row Level Security) para autenticação e autorização
+- [ ] Implementar funções edge para auth e provisionamento de usuários
+- [ ] Configurar storage buckets para fotos e documentos
+- [ ] Criar seeds iniciais para usuários admin e configurações básicas
+
+### API e Microserviços
+- [ ] Desenvolver API RESTful para integração com sistemas externos
+- [ ] Configurar arquitetura de microserviços event-driven
+- [ ] Implementar filas com Kafka ou RabbitMQ para processamento assíncrono
+- [ ] Criar serviço de gestão de usuários
+- [ ] Criar serviço de gestão de pedidos
+- [ ] Criar serviço de gestão financeira
+- [ ] Criar serviço de qualidade e segurança
+- [ ] Implementar API Gateway com Kong ou Nginx
+- [ ] Configurar GraphQL Federation para APIs federadas
+- [ ] Implementar Service Discovery com Consul
+- [ ] Configurar Load Balancing e horizontal scaling
+
+### Testing e Observabilidade
+- [ ] Configurar CI/CD com GitHub Actions
+- [ ] Containerizar aplicação com Docker
+- [ ] Configurar orquestração com Kubernetes
+- [ ] Implementar monitoring com Grafana e Prometheus
+- [ ] Configurar logging com ELK Stack e OpenTelemetry
+
+### Documentação
+- [ ] Gerar documentação dos fluxos de negócio para cliente, fornecedor, entregador, administrador, financeiro, desenvolvedor e IA
+- [ ] Mapear medidas de cibersegurança

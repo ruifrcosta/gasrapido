@@ -1,3 +1,5 @@
+import mfaService, { MfaChallenge } from './mfaService';
+
 // Serviço para gerenciar autenticação no GasRápido
 export interface User {
   id: string;
@@ -32,7 +34,13 @@ class AuthService {
   private tokens: AuthTokens | null = null;
 
   // Fazer login
-  async login(credentials: LoginCredentials): Promise<{ user: User; tokens: AuthTokens }> {
+  async login(credentials: LoginCredentials): Promise<{ 
+    user: User; 
+    tokens: AuthTokens;
+    needsMfa?: boolean;
+    challenge?: MfaChallenge;
+    methodType?: string;
+  }> {
     await this.simulateApiCall();
     
     // Simular autenticação bem-sucedida
@@ -49,10 +57,54 @@ class AuthService {
       refreshToken: this.generateToken()
     };
     
+    // Verificar se o usuário tem MFA configurado
+    const userMfaMethods = mfaService.getUserMfaMethods(this.currentUser.id);
+    const primaryMethod = userMfaMethods.find(method => method.isPrimary && method.isVerified);
+    
+    if (primaryMethod) {
+      // Iniciar desafio MFA
+      const challenge = await mfaService.initiateMfaChallenge(this.currentUser.id, primaryMethod.id);
+      
+      return {
+        user: this.currentUser,
+        tokens: this.tokens,
+        needsMfa: true,
+        challenge,
+        methodType: primaryMethod.type
+      };
+    }
+    
     return {
       user: this.currentUser,
       tokens: this.tokens
     };
+  }
+
+  // Completar login com MFA
+  async completeMfaLogin(challengeId: string, code: string): Promise<{ 
+    user: User; 
+    tokens: AuthTokens;
+  } | null> {
+    if (!this.currentUser || !this.tokens) {
+      return null;
+    }
+    
+    try {
+      const isValid = await mfaService.verifyMfaChallenge(challengeId, code);
+      
+      if (isValid) {
+        // Atualizar data de último login
+        this.currentUser.lastLogin = new Date().toISOString();
+        return {
+          user: this.currentUser,
+          tokens: this.tokens
+        };
+      }
+    } catch (error) {
+      console.error('MFA verification failed:', error);
+    }
+    
+    return null;
   }
 
   // Fazer registro
@@ -155,6 +207,17 @@ class AuthService {
     
     // Usar indexOf em vez de includes para compatibilidade
     return roles.indexOf(this.currentUser.role) !== -1;
+  }
+
+  // Verificar se o usuário requer MFA
+  async requiresMfa(userId: string): Promise<boolean> {
+    const userMfaMethods = mfaService.getUserMfaMethods(userId);
+    return userMfaMethods.some(method => method.isVerified);
+  }
+
+  // Obter métodos MFA disponíveis para o usuário
+  async getUserMfaMethods(userId: string) {
+    return mfaService.getUserMfaMethods(userId);
   }
 
   // Atualizar perfil do usuário

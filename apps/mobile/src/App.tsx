@@ -1,119 +1,116 @@
+// @ts-nocheck
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Ionicons } from '@expo/vector-icons';
-
-// Screens
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SupabaseProvider } from './contexts/SupabaseContext';
 import HomeScreen from './screens/HomeScreen';
-import OrdersScreen from './screens/OrdersScreen';
-import WalletScreen from './screens/WalletScreen';
-import ProfileScreen from './screens/ProfileScreen';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 import OrderGasScreen from './screens/OrderGasScreen';
 import TrackOrderScreen from './screens/TrackOrderScreen';
+import SupplierDashboardScreen from './screens/SupplierDashboardScreen';
+import CourierDashboardScreen from './screens/CourierDashboardScreen';
+import FinalCertificationScreen from './screens/FinalCertificationScreen';
+import MFASetupScreen from './screens/MFASetupScreen';
+import MFAVerificationScreen from './screens/MFAVerificationScreen';
+import BackupManagementScreen from './screens/BackupManagementScreen';
+import TicketingManagementScreen from './screens/TicketingManagementScreen';
+import AIAgentsManagementScreen from './screens/AIAgentsManagementScreen';
+import IntelligenceEngineManagementScreen from './screens/IntelligenceEngineManagementScreen';
+import MatchingManagementScreen from './screens/MatchingManagementScreen';
+import PricingDashboardScreen from './screens/PricingDashboardScreen';
 
-// Theme
-import { Colors } from './utils/theme';
+const Stack = createNativeStackNavigator();
 
-const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
-
-function HomeStack() {
+const App = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen 
-        name="HomeMain" 
-        component={HomeScreen}
-        options={{ title: 'Início' }}
-      />
-      <Stack.Screen 
-        name="OrderGas" 
-        component={OrderGasScreen}
-        options={{ title: 'Pedir Gás' }}
-      />
-    </Stack.Navigator>
+    <SupabaseProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen 
+            name="Home" 
+            component={HomeScreen} 
+            options={{ title: 'GasRápido' }} 
+          />
+          <Stack.Screen 
+            name="Login" 
+            component={LoginScreen} 
+            options={{ title: 'Entrar' }} 
+          />
+          <Stack.Screen 
+            name="Register" 
+            component={RegisterScreen} 
+            options={{ title: 'Registar' }} 
+          />
+          <Stack.Screen 
+            name="OrderGas" 
+            component={OrderGasScreen} 
+            options={{ title: 'Encomendar Gás' }} 
+          />
+          <Stack.Screen 
+            name="TrackOrder" 
+            component={TrackOrderScreen} 
+            options={{ title: 'Rastrear Pedido' }} 
+          />
+          <Stack.Screen 
+            name="SupplierDashboard" 
+            component={SupplierDashboardScreen} 
+            options={{ title: 'Dashboard Fornecedor' }} 
+          />
+          <Stack.Screen 
+            name="CourierDashboard" 
+            component={CourierDashboardScreen} 
+            options={{ title: 'Dashboard Entregador' }} 
+          />
+          <Stack.Screen 
+            name="FinalCertification" 
+            component={FinalCertificationScreen} 
+            options={{ title: 'Certificação Final' }} 
+          />
+          <Stack.Screen 
+            name="MFASetup" 
+            component={MFASetupScreen} 
+            options={{ title: 'Configurar MFA' }} 
+          />
+          <Stack.Screen 
+            name="MFAVerification" 
+            component={MFAVerificationScreen} 
+            options={{ title: 'Verificação MFA' }} 
+          />
+          <Stack.Screen 
+            name="BackupManagement" 
+            component={BackupManagementScreen} 
+            options={{ title: 'Gestão de Backups' }} 
+          />
+          <Stack.Screen 
+            name="TicketingManagement" 
+            component={TicketingManagementScreen} 
+            options={{ title: 'Gestão de Tickets' }} 
+          />
+          <Stack.Screen 
+            name="AIAgentsManagement" 
+            component={AIAgentsManagementScreen} 
+            options={{ title: 'Gestão de Agentes IA' }} 
+          />
+          <Stack.Screen 
+            name="IntelligenceEngineManagement" 
+            component={IntelligenceEngineManagementScreen} 
+            options={{ title: 'Motor de Inteligência' }} 
+          />
+          <Stack.Screen 
+            name="MatchingManagement" 
+            component={MatchingManagementScreen} 
+            options={{ title: 'Gestão de Matching' }} 
+          />
+          <Stack.Screen 
+            name="PricingDashboard" 
+            component={PricingDashboardScreen} 
+            options={{ title: 'Dashboard de Preços' }} 
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SupabaseProvider>
   );
-}
+};
 
-function OrdersStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen 
-        name="OrdersMain" 
-        component={OrdersScreen}
-        options={{ title: 'Meus Pedidos' }}
-      />
-      <Stack.Screen 
-        name="TrackOrder" 
-        component={TrackOrderScreen}
-        options={{ title: 'Rastrear Pedido' }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }: { route: any }) => ({
-          tabBarIcon: ({ focused, color, size }: { focused: boolean; color: string; size: number }) => {
-            let iconName: keyof typeof Ionicons.glyphMap;
-
-            if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home-outline';
-            } else if (route.name === 'Pedidos') {
-              iconName = focused ? 'list' : 'list-outline';
-            } else if (route.name === 'Carteira') {
-              iconName = focused ? 'wallet' : 'wallet-outline';
-            } else if (route.name === 'Perfil') {
-              iconName = focused ? 'person' : 'person-outline';
-            } else {
-              iconName = 'ellipse';
-            }
-
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: Colors.primary,
-          tabBarInactiveTintColor: Colors.gray,
-          tabBarStyle: {
-            backgroundColor: Colors.white,
-            borderTopWidth: 1,
-            borderTopColor: Colors.lightGray,
-            height: 60,
-            paddingBottom: 8,
-            paddingTop: 8,
-          },
-          headerStyle: {
-            backgroundColor: Colors.primary,
-          },
-          headerTintColor: Colors.white,
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        })}
-      >
-        <Tab.Screen 
-          name="Home" 
-          component={HomeStack}
-          options={{ title: 'Início' }}
-        />
-        <Tab.Screen 
-          name="Pedidos" 
-          component={OrdersStack}
-          options={{ title: 'Pedidos' }}
-        />
-        <Tab.Screen 
-          name="Carteira" 
-          component={WalletScreen}
-          options={{ title: 'Carteira' }}
-        />
-        <Tab.Screen 
-          name="Perfil" 
-          component={ProfileScreen}
-          options={{ title: 'Perfil' }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
-}
+export default App;

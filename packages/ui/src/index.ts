@@ -7,3 +7,6 @@ export * from './components/common/Input';
 export * from './components/common/Card';
 export * from './components/common/Alert';
 export * from './components/common/Loading';
+
+// MFA Components
+export * from './MfaSetupComponent';

@@ -77,6 +77,9 @@ supabase db reset
 # Instalar todas as dependências
 npm install
 
+# Instalar dependências adicionais para backup e segurança
+npm install @aws-sdk/client-s3 @aws-sdk/client-kms crypto-js
+
 # Configurar variáveis de ambiente
 cp apps/web/.env.example apps/web/.env
 cp apps/mobile/.env.example apps/mobile/.env
