@@ -41,8 +41,36 @@
         "assets/logo/wordmark/",
         "assets/logo/symbol/"
       ],
-      "formats": ["SVG"],
-      "status": "Pendente de criação"
+      "formats": ["SVG", "PNG", "WebP"],
+      "status": "Criado",
+      "variants": {
+        "wordmark_full": {
+          "fileName": "logo-wordmark-full.svg",
+          "usageContexts": [
+            "header desktop",
+            "landing page",
+            "documents oficiais",
+            "marketing banners"
+          ]
+        },
+        "wordmark_mini": {
+          "fileName": "logo-wordmark-mini.svg",
+          "usageContexts": [
+            "mobile navigation",
+            "condensed spaces"
+          ]
+        },
+        "symbol_only": {
+          "fileName": "logo-symbol.svg",
+          "usageContexts": [
+            "favicon",
+            "app icon",
+            "mobile nav icon",
+            "map marker",
+            "sidebar collapsed"
+          ]
+        }
+      }
     }
   },
   "downloadExecution": {

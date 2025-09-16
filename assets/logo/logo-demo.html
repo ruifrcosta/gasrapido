@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GasRápido Logo Demo</title>
+    <link rel="stylesheet" href="logo-styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #FFFFFF;
+            color: #111111;
+        }
+        
+        .dark-mode {
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #EEEEEE;
+        }
+        
+        .logo-demo-section {
+            margin: 40px 0;
+        }
+        
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .logo-card {
+            border: 1px solid #EEEEEE;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .logo-card h3 {
+            margin-top: 0;
+        }
+        
+        .toggle-dark-mode {
+            padding: 10px 20px;
+            background-color: #FFB400;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-logo">
+            <!-- Desktop: Full wordmark -->
+            <img src="./wordmark/logo-wordmark-full.svg" alt="GasRápido logo" class="logo-wordmark" id="desktop-logo">
+        </div>
+        <button class="toggle-dark-mode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    </header>
+
+    <main>
+        <section class="logo-demo-section">
+            <h2>Logo Variants</h2>
+            <div class="logo-grid">
+                <div class="logo-card">
+                    <h3>Full Wordmark</h3>
+                    <img src="./wordmark/logo-wordmark-full.svg" alt="GasRápido full wordmark logo" class="logo-wordmark">
+                    <p>Usage: Header desktop, landing page, official documents</p>
+                </div>
+                
+                <div class="logo-card">
+                    <h3>Mini Wordmark</h3>
+                    <img src="./wordmark/logo-wordmark-mini.svg" alt="GasRápido mini wordmark logo" class="logo-wordmark-mini">
+                    <p>Usage: Mobile navigation, condensed spaces</p>
+                </div>
+                
+                <div class="logo-card">
+                    <h3>Symbol Only</h3>
+                    <img src="./symbol/logo-symbol.svg" alt="GasRápido symbol logo" class="logo-symbol">
+                    <p>Usage: Favicon, app icon, map marker</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="logo-demo-section">
+            <h2>Responsive Behavior</h2>
+            <p>Resize your browser window to see how the logo changes:</p>
+            <div class="logo-card">
+                <h3>Responsive Logo</h3>
+                <img src="./wordmark/logo-wordmark-full.svg" alt="GasRápido responsive logo" class="logo-responsive">
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+        
+        // Simple feature detection for SVG support
+        function supportsSvg() {
+            return !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+        }
+        
+        // Add class to body if SVG is not supported
+        if (!supportsSvg()) {
+            document.body.classList.add('no-svg');
+        }
+    </script>
+</body>
+</html>

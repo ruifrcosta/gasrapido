@@ -75,21 +75,21 @@
   - [x] Desenvolver serviço de alertas
   - [x] Implementar componentes de notificação
   - [x] Criar tela de gestão de alertas
-  - [ ] Integrar com sistema de notificações existente
+  - [x] Integrar com sistema de notificações existente
 
 ## Próximas Tarefas
 
 ### Controles Administrativos
-- [ ] Criar controles de override manual e políticas administrativas
-  - [ ] Implementar interface de administração
-  - [ ] Criar mecanismos de controle manual
-  - [ ] Desenvolver políticas de governança
+- [x] Criar controles de override manual e políticas administrativas
+  - [x] Implementar interface de administração
+  - [x] Criar mecanismos de controle manual
+  - [x] Desenvolver políticas de governança
 
 ### Transparência de Preços
-- [ ] Implementar transparência na comunicação com clientes sobre preços dinâmicos
-  - [ ] Criar componentes de explicação de preços
-  - [ ] Implementar histórico de preços
-  - [ ] Desenvolver comunicação clara de valores
+- [x] Implementar transparência na comunicação com clientes sobre preços dinâmicos
+  - [x] Criar componentes de explicação de preços
+  - [x] Implementar histórico de preços
+  - [x] Desenvolver comunicação clara de valores
 
 ### Testes e Simulação
 - [ ] Desenvolver sistema de testes e simulação para o motor de precificação

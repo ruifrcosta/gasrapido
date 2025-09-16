@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Card } from '@gasrapido/ui';
+import { notificationService } from '@gasrapido/shared';
 
 // Definir interfaces locais
 interface Notification {
@@ -31,38 +32,10 @@ const NotificationsComponent: React.FC<NotificationsComponentProps> = (props: No
 
   const loadNotifications = async () => {
     try {
-      // Em uma implementação real, isso carregaria as notificações do serviço
-      const mockNotifications: Notification[] = [
-        {
-          id: '1',
-          title: 'Pedido Confirmado',
-          message: 'Seu pedido #12345 foi confirmado pelo fornecedor.',
-          type: 'success',
-          timestamp: '2023-05-01T10:15:00Z',
-          read: false,
-          orderId: 'order-12345'
-        },
-        {
-          id: '2',
-          title: 'Entregador a Caminho',
-          message: 'Seu entregador está a caminho com o seu pedido.',
-          type: 'info',
-          timestamp: '2023-05-01T10:45:00Z',
-          read: false,
-          orderId: 'order-12345'
-        },
-        {
-          id: '3',
-          title: 'Novo Pedido',
-          message: 'Você tem um novo pedido para processar.',
-          type: 'info',
-          timestamp: '2023-05-01T09:30:00Z',
-          read: true,
-          userId: 'supplier-123'
-        }
-      ];
-      
-      setNotifications(mockNotifications);
+      setLoading(true);
+      // Carregar notificações reais do serviço
+      const userNotifications = await notificationService.getUserNotifications(userId);
+      setNotifications(userNotifications);
     } catch (error) {
       console.error('Erro ao carregar notificações:', error);
     } finally {
@@ -90,20 +63,27 @@ const NotificationsComponent: React.FC<NotificationsComponentProps> = (props: No
     }
   };
 
-  const handleNotificationPress = (notification: Notification) => {
+  const handleNotificationPress = async (notification: Notification) => {
     if (onNotificationPress) {
       onNotificationPress(notification);
     }
     
     // Marcar como lida ao clicar
-    if (!notification.read && onMarkAsRead) {
-      onMarkAsRead(notification.id);
-      // Atualizar localmente também
-      setNotifications((prev: Notification[]) => 
-        prev.map((n: Notification) => 
-          n.id === notification.id ? { ...n, read: true } : n
-        )
-      );
+    if (!notification.read) {
+      try {
+        await notificationService.markAsRead(notification.id);
+        if (onMarkAsRead) {
+          onMarkAsRead(notification.id);
+        }
+        // Atualizar localmente também
+        setNotifications((prev: Notification[]) => 
+          prev.map((n: Notification) => 
+            n.id === notification.id ? { ...n, read: true } : n
+          )
+        );
+      } catch (error) {
+        console.error('Erro ao marcar notificação como lida:', error);
+      }
     }
   };
 

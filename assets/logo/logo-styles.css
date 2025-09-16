@@ -1,0 +1,90 @@
+/* Logo Styles for GasRápido */
+/* This CSS demonstrates how to properly integrate logos according to the specification */
+
+/* Base logo classes */
+.logo-symbol {
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+}
+
+.logo-wordmark {
+  width: auto;
+  height: 60px;
+  display: inline-block;
+}
+
+.logo-wordmark-mini {
+  width: auto;
+  height: 40px;
+  display: inline-block;
+}
+
+/* Responsive behavior */
+@media (max-width: 320px) {
+  .logo-responsive {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-responsive {
+    width: auto;
+    height: 40px;
+  }
+}
+
+@media (min-width: 769px) {
+  .logo-responsive {
+    width: auto;
+    height: 60px;
+  }
+}
+
+/* Header integration */
+.header-logo {
+  display: flex;
+  align-items: center;
+}
+
+/* Dark mode alternatives */
+@media (prefers-color-scheme: dark) {
+  .logo-wordmark,
+  .logo-wordmark-mini {
+    filter: invert(100%);
+  }
+}
+
+/* Navigation icons */
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  color: #FFB400; /* Primary color */
+}
+
+.nav-icon:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 0 4px rgba(255, 180, 0, 0.3);
+}
+
+/* Fallback handling */
+.no-svg .logo-symbol {
+  background-image: url('./png/logo-symbol@1x.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.no-svg .logo-wordmark {
+  background-image: url('./png/logo-wordmark-full@1x.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Preload priority */
+/* In HTML, use: <link rel="preload" as="image" href="./svg/logo-wordmark-full.svg" importance="high"> */
+
+/* Lazy loading for non-critical logos */
+.lazy-logo {
+  content-visibility: auto;
+}

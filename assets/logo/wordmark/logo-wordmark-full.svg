@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="logo-title-wordmark" width="300" height="60">
+  <title id="logo-title-wordmark">GasRápido logo</title>
+  <desc>Wordmark logo for GasRápido - fast gas delivery service</desc>
+  <style>
+    .logo-text { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 24px; }
+    .logo-highlight { fill: #FFB400; }
+    .logo-primary { fill: #111111; }
+  </style>
+  <text x="10" y="35" class="logo-text">
+    <tspan class="logo-primary">Gas</tspan><tspan class="logo-highlight">Rápido</tspan>
+  </text>
+  <circle cx="270" cy="30" r="15" fill="#FFB400" />
+  <path d="M270 20 L270 40 M260 30 L280 30" stroke="#FFFFFF" stroke-width="2" />
+</svg>

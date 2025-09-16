@@ -1,5 +1,5 @@
 // Serviço para gerenciar notificações no GasRápido
-export interface Notification {
+export interface AppNotification {
   id: string;
   title: string;
   message: string;
@@ -12,17 +12,17 @@ export interface Notification {
 
 class NotificationService {
   // Armazenamento temporário de notificações (em uma implementação real, isso viria de uma API)
-  private notifications: Notification[] = [];
+  private notifications: AppNotification[] = [];
 
   // Enviar notificação para um usuário específico
   async sendNotification(
     userId: string,
     title: string,
     message: string,
-    type: Notification['type'] = 'info',
+    type: AppNotification['type'] = 'info',
     orderId?: string
-  ): Promise<Notification> {
-    const notification: Notification = {
+  ): Promise<AppNotification> {
+    const notification: AppNotification = {
       id: this.generateId(),
       title,
       message,
@@ -42,7 +42,7 @@ class NotificationService {
   }
 
   // Obter notificações de um usuário
-  async getUserNotifications(userId: string): Promise<Notification[]> {
+  async getUserNotifications(userId: string): Promise<AppNotification[]> {
     await this.simulateApiCall();
     
     return this.notifications
@@ -51,7 +51,7 @@ class NotificationService {
   }
 
   // Marcar notificação como lida
-  async markAsRead(notificationId: string): Promise<Notification | null> {
+  async markAsRead(notificationId: string): Promise<AppNotification | null> {
     await this.simulateApiCall();
     
     const notification = this.notifications.find(n => n.id === notificationId);
@@ -110,9 +110,9 @@ class NotificationService {
     userIds: string[],
     title: string,
     message: string,
-    type: Notification['type'] = 'info'
-  ): Promise<Notification[]> {
-    const notifications: Notification[] = [];
+    type: AppNotification['type'] = 'info'
+  ): Promise<AppNotification[]> {
+    const notifications: AppNotification[] = [];
     
     for (const userId of userIds) {
       const notification = await this.sendNotification(userId, title, message, type);
@@ -128,8 +128,8 @@ class NotificationService {
     orderId: string,
     title: string,
     message: string,
-    type: Notification['type'] = 'info'
-  ): Promise<Notification> {
+    type: AppNotification['type'] = 'info'
+  ): Promise<AppNotification> {
     return this.sendNotification(userId, title, message, type, orderId);
   }
 
@@ -145,3 +145,4 @@ class NotificationService {
 }
 
 export default new NotificationService();
+export { NotificationService };
