@@ -1,0 +1,1941 @@
+{
+  "name": "GasRápido Supabase Backend Specification",
+  "version": "1.0.0",
+  "description": "Complete specification for implementing the Supabase backend for GasRápido platform",
+  "extensions": [
+    "uuid-ossp",
+    "postgis"
+  ],
+  "enums": [
+    {
+      "name": "user_role",
+      "values": ["admin", "vendor", "courier", "client"]
+    },
+    {
+      "name": "order_status",
+      "values": ["pending", "confirmed", "preparing", "in_transit", "delivered", "cancelled"]
+    },
+    {
+      "name": "payment_status",
+      "values": ["pending", "processing", "completed", "failed", "refunded"]
+    },
+    {
+      "name": "payment_method",
+      "values": ["cash", "multicaixa", "card", "wallet"]
+    },
+    {
+      "name": "playbook_category",
+      "values": ["cell_failure", "price_spike", "system_failure", "other"]
+    },
+    {
+      "name": "playbook_priority",
+      "values": ["low", "medium", "high", "critical"]
+    },
+    {
+      "name": "incident_status",
+      "values": ["open", "in_progress", "resolved", "closed"]
+    },
+    {
+      "name": "alert_type",
+      "values": ["scarcity", "sla", "pricing", "info", "warning", "error"]
+    },
+    {
+      "name": "alert_severity",
+      "values": ["low", "medium", "high", "critical"]
+    },
+    {
+      "name": "alert_frequency",
+      "values": ["immediate", "hourly", "daily", "weekly"]
+    },
+    {
+      "name": "alert_channel",
+      "values": ["email", "sms", "push", "dashboard"]
+    }
+  ],
+  "tables": [
+    {
+      "name": "profiles",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "references": "auth.users(id)",
+          "on_delete": "cascade",
+          "is_primary_key": true
+        },
+        {
+          "name": "email",
+          "type": "varchar(255)",
+          "is_unique": true,
+          "is_not_null": true
+        },
+        {
+          "name": "full_name",
+          "type": "varchar(255)"
+        },
+        {
+          "name": "phone",
+          "type": "varchar(20)"
+        },
+        {
+          "name": "avatar_url",
+          "type": "text"
+        },
+        {
+          "name": "role",
+          "type": "user_role",
+          "default": "'client'"
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "address",
+          "type": "text"
+        },
+        {
+          "name": "location",
+          "type": "geography(point, 4326)"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_profiles_role",
+          "columns": ["role"]
+        },
+        {
+          "name": "idx_profiles_location",
+          "columns": ["location"],
+          "type": "gist"
+        }
+      ]
+    },
+    {
+      "name": "vendors",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "cascade"
+        },
+        {
+          "name": "business_name",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "license_number",
+          "type": "varchar(100)"
+        },
+        {
+          "name": "tax_id",
+          "type": "varchar(50)"
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "address",
+          "type": "text",
+          "is_not_null": true
+        },
+        {
+          "name": "location",
+          "type": "geography(point, 4326)",
+          "is_not_null": true
+        },
+        {
+          "name": "operating_hours",
+          "type": "jsonb"
+        },
+        {
+          "name": "is_verified",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "rating",
+          "type": "decimal(3,2)",
+          "default": "0.00"
+        },
+        {
+          "name": "total_orders",
+          "type": "integer",
+          "default": "0"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_vendors_location",
+          "columns": ["location"],
+          "type": "gist"
+        },
+        {
+          "name": "idx_vendors_active",
+          "columns": ["is_active", "is_verified"]
+        }
+      ]
+    },
+    {
+      "name": "couriers",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "cascade"
+        },
+        {
+          "name": "vehicle_type",
+          "type": "varchar(50)"
+        },
+        {
+          "name": "license_plate",
+          "type": "varchar(20)"
+        },
+        {
+          "name": "driver_license",
+          "type": "varchar(50)"
+        },
+        {
+          "name": "vehicle_registration",
+          "type": "text"
+        },
+        {
+          "name": "is_verified",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "is_available",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "current_location",
+          "type": "geography(point, 4326)"
+        },
+        {
+          "name": "rating",
+          "type": "decimal(3,2)",
+          "default": "0.00"
+        },
+        {
+          "name": "total_deliveries",
+          "type": "integer",
+          "default": "0"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_couriers_available",
+          "columns": ["is_available", "is_verified"]
+        },
+        {
+          "name": "idx_couriers_location",
+          "columns": ["current_location"],
+          "type": "gist"
+        }
+      ]
+    },
+    {
+      "name": "products",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "vendor_id",
+          "type": "uuid",
+          "references": "vendors(id)",
+          "on_delete": "cascade"
+        },
+        {
+          "name": "name",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "weight_kg",
+          "type": "decimal(5,2)"
+        },
+        {
+          "name": "price_aoa",
+          "type": "decimal(10,2)",
+          "is_not_null": true
+        },
+        {
+          "name": "stock_quantity",
+          "type": "integer",
+          "default": "0"
+        },
+        {
+          "name": "is_available",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "image_url",
+          "type": "text"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "order_number",
+          "type": "varchar(50)",
+          "is_unique": true,
+          "is_not_null": true
+        },
+        {
+          "name": "customer_id",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "set null"
+        },
+        {
+          "name": "vendor_id",
+          "type": "uuid",
+          "references": "vendors(id)",
+          "on_delete": "set null"
+        },
+        {
+          "name": "courier_id",
+          "type": "uuid",
+          "references": "couriers(id)",
+          "on_delete": "set null"
+        },
+        {
+          "name": "product_id",
+          "type": "uuid",
+          "references": "products(id)",
+          "on_delete": "set null"
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "default": "1",
+          "is_not_null": true
+        },
+        {
+          "name": "unit_price",
+          "type": "decimal(10,2)",
+          "is_not_null": true
+        },
+        {
+          "name": "total_amount",
+          "type": "decimal(10,2)",
+          "is_not_null": true
+        },
+        {
+          "name": "delivery_fee",
+          "type": "decimal(10,2)",
+          "default": "0"
+        },
+        {
+          "name": "final_amount",
+          "type": "decimal(10,2)",
+          "is_not_null": true
+        },
+        {
+          "name": "status",
+          "type": "order_status",
+          "default": "'pending'"
+        },
+        {
+          "name": "delivery_address",
+          "type": "text",
+          "is_not_null": true
+        },
+        {
+          "name": "delivery_location",
+          "type": "geography(point, 4326)"
+        },
+        {
+          "name": "pickup_address",
+          "type": "text"
+        },
+        {
+          "name": "pickup_location",
+          "type": "geography(point, 4326)"
+        },
+        {
+          "name": "estimated_delivery",
+          "type": "timestamp with time zone"
+        },
+        {
+          "name": "delivered_at",
+          "type": "timestamp with time zone"
+        },
+        {
+          "name": "special_instructions",
+          "type": "text"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_orders_status",
+          "columns": ["status"]
+        },
+        {
+          "name": "idx_orders_customer",
+          "columns": ["customer_id"]
+        },
+        {
+          "name": "idx_orders_vendor",
+          "columns": ["vendor_id"]
+        },
+        {
+          "name": "idx_orders_courier",
+          "columns": ["courier_id"]
+        },
+        {
+          "name": "idx_orders_created_at",
+          "columns": ["created_at"]
+        }
+      ]
+    },
+    {
+      "name": "payments",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "order_id",
+          "type": "uuid",
+          "references": "orders(id)",
+          "on_delete": "cascade"
+        },
+        {
+          "name": "amount",
+          "type": "decimal(10,2)",
+          "is_not_null": true
+        },
+        {
+          "name": "method",
+          "type": "payment_method",
+          "is_not_null": true
+        },
+        {
+          "name": "status",
+          "type": "payment_status",
+          "default": "'pending'"
+        },
+        {
+          "name": "transaction_id",
+          "type": "varchar(255)"
+        },
+        {
+          "name": "multicaixa_reference",
+          "type": "varchar(100)"
+        },
+        {
+          "name": "payment_provider",
+          "type": "varchar(50)"
+        },
+        {
+          "name": "provider_response",
+          "type": "jsonb"
+        },
+        {
+          "name": "processed_at",
+          "type": "timestamp with time zone"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_payments_status",
+          "columns": ["status"]
+        }
+      ]
+    },
+    {
+      "name": "notifications",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "cascade"
+        },
+        {
+          "name": "title",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "message",
+          "type": "text",
+          "is_not_null": true
+        },
+        {
+          "name": "type",
+          "type": "varchar(50)"
+        },
+        {
+          "name": "data",
+          "type": "jsonb"
+        },
+        {
+          "name": "is_read",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "sent_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "read_at",
+          "type": "timestamp with time zone"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "idx_notifications_user_unread",
+          "columns": ["user_id", "is_read"]
+        }
+      ]
+    },
+    {
+      "name": "reviews",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "order_id",
+          "type": "uuid",
+          "references": "orders(id)",
+          "on_delete": "cascade"
+        },
+        {
+          "name": "reviewer_id",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "set null"
+        },
+        {
+          "name": "vendor_id",
+          "type": "uuid",
+          "references": "vendors(id)",
+          "on_delete": "cascade"
+        },
+        {
+          "name": "courier_id",
+          "type": "uuid",
+          "references": "couriers(id)",
+          "on_delete": "cascade"
+        },
+        {
+          "name": "rating",
+          "type": "integer",
+          "check": "rating >= 1 AND rating <= 5"
+        },
+        {
+          "name": "comment",
+          "type": "text"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        }
+      ]
+    },
+    {
+      "name": "operational_playbooks",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "title",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "category",
+          "type": "playbook_category"
+        },
+        {
+          "name": "priority",
+          "type": "playbook_priority"
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        }
+      ]
+    },
+    {
+      "name": "playbook_steps",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "playbook_id",
+          "type": "uuid",
+          "references": "operational_playbooks(id)",
+          "on_delete": "cascade",
+          "is_not_null": true
+        },
+        {
+          "name": "step_number",
+          "type": "integer",
+          "is_not_null": true
+        },
+        {
+          "name": "title",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "action_required",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "responsible_role",
+          "type": "varchar(50)"
+        },
+        {
+          "name": "estimated_time_minutes",
+          "type": "integer"
+        },
+        {
+          "name": "dependencies",
+          "type": "text[]"
+        }
+      ]
+    },
+    {
+      "name": "operational_incidents",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "playbook_id",
+          "type": "uuid",
+          "references": "operational_playbooks(id)",
+          "on_delete": "set null"
+        },
+        {
+          "name": "title",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "status",
+          "type": "incident_status",
+          "default": "'open'"
+        },
+        {
+          "name": "priority",
+          "type": "playbook_priority"
+        },
+        {
+          "name": "reported_by",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "set null"
+        },
+        {
+          "name": "assigned_to",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "set null"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "resolved_at",
+          "type": "timestamp with time zone"
+        },
+        {
+          "name": "resolution_notes",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "alerts",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "title",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "message",
+          "type": "text",
+          "is_not_null": true
+        },
+        {
+          "name": "type",
+          "type": "alert_type"
+        },
+        {
+          "name": "severity",
+          "type": "alert_severity"
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "cascade"
+        },
+        {
+          "name": "resource_id",
+          "type": "uuid"
+        },
+        {
+          "name": "read",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "triggered_at",
+          "type": "timestamp with time zone"
+        },
+        {
+          "name": "resolved_at",
+          "type": "timestamp with time zone"
+        },
+        {
+          "name": "metadata",
+          "type": "jsonb"
+        }
+      ]
+    },
+    {
+      "name": "alert_configs",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "cascade",
+          "is_not_null": true
+        },
+        {
+          "name": "type",
+          "type": "alert_type"
+        },
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "threshold",
+          "type": "numeric"
+        },
+        {
+          "name": "frequency",
+          "type": "alert_frequency"
+        },
+        {
+          "name": "channels",
+          "type": "alert_channel[]"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()"
+        }
+      ]
+    },
+    {
+      "name": "metrics",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "name",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "value",
+          "type": "numeric",
+          "is_not_null": true
+        },
+        {
+          "name": "timestamp",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "is_not_null": true
+        },
+        {
+          "name": "category",
+          "type": "varchar(100)",
+          "is_not_null": true
+        },
+        {
+          "name": "tags",
+          "type": "jsonb"
+        }
+      ]
+    },
+    {
+      "name": "price_history",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "order_id",
+          "type": "uuid",
+          "references": "orders(id)",
+          "on_delete": "set null"
+        },
+        {
+          "name": "product_id",
+          "type": "uuid",
+          "references": "products(id)",
+          "on_delete": "cascade",
+          "is_not_null": true
+        },
+        {
+          "name": "base_price",
+          "type": "numeric",
+          "is_not_null": true
+        },
+        {
+          "name": "final_price",
+          "type": "numeric",
+          "is_not_null": true
+        },
+        {
+          "name": "factors",
+          "type": "jsonb",
+          "is_not_null": true
+        },
+        {
+          "name": "multiplier",
+          "type": "numeric",
+          "is_not_null": true
+        },
+        {
+          "name": "calculated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "is_not_null": true
+        },
+        {
+          "name": "location",
+          "type": "jsonb"
+        }
+      ]
+    },
+    {
+      "name": "audit_logs",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "set null"
+        },
+        {
+          "name": "action",
+          "type": "varchar(100)",
+          "is_not_null": true
+        },
+        {
+          "name": "resource_type",
+          "type": "varchar(100)",
+          "is_not_null": true
+        },
+        {
+          "name": "resource_id",
+          "type": "uuid"
+        },
+        {
+          "name": "details",
+          "type": "jsonb"
+        },
+        {
+          "name": "ip_address",
+          "type": "varchar(45)"
+        },
+        {
+          "name": "user_agent",
+          "type": "text"
+        },
+        {
+          "name": "timestamp",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "is_not_null": true
+        }
+      ]
+    },
+    {
+      "name": "encryption_keys",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "name",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "key",
+          "type": "text",
+          "is_not_null": true
+        },
+        {
+          "name": "algorithm",
+          "type": "varchar(50)",
+          "is_not_null": true
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "is_not_null": true
+        },
+        {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "is_not_null": true
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "default": "true"
+        }
+      ]
+    },
+    {
+      "name": "compliance_reports",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "report_type",
+          "type": "varchar(100)",
+          "is_not_null": true
+        },
+        {
+          "name": "generated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "is_not_null": true
+        },
+        {
+          "name": "period_start",
+          "type": "timestamp with time zone",
+          "is_not_null": true
+        },
+        {
+          "name": "period_end",
+          "type": "timestamp with time zone",
+          "is_not_null": true
+        },
+        {
+          "name": "content",
+          "type": "text",
+          "is_not_null": true
+        },
+        {
+          "name": "generated_by",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "set null"
+        }
+      ]
+    },
+    {
+      "name": "security_policies",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "name",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "description",
+          "type": "text"
+        },
+        {
+          "name": "category",
+          "type": "varchar(100)"
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "is_not_null": true
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "is_not_null": true
+        }
+      ]
+    },
+    {
+      "name": "security_rules",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "policy_id",
+          "type": "uuid",
+          "references": "security_policies(id)",
+          "on_delete": "cascade",
+          "is_not_null": true
+        },
+        {
+          "name": "rule_name",
+          "type": "varchar(255)",
+          "is_not_null": true
+        },
+        {
+          "name": "rule_description",
+          "type": "text"
+        },
+        {
+          "name": "condition",
+          "type": "text",
+          "is_not_null": true
+        },
+        {
+          "name": "action",
+          "type": "varchar(100)",
+          "is_not_null": true
+        },
+        {
+          "name": "severity",
+          "type": "alert_severity"
+        }
+      ]
+    },
+    {
+      "name": "user_audit_logs",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "uuid_generate_v4()",
+          "is_primary_key": true
+        },
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "references": "profiles(id)",
+          "on_delete": "cascade",
+          "is_not_null": true
+        },
+        {
+          "name": "action",
+          "type": "varchar(100)",
+          "is_not_null": true
+        },
+        {
+          "name": "details",
+          "type": "jsonb"
+        },
+        {
+          "name": "timestamp",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "is_not_null": true
+        },
+        {
+          "name": "ip_address",
+          "type": "varchar(45)"
+        },
+        {
+          "name": "user_agent",
+          "type": "text"
+        }
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "update_updated_at_column",
+      "returns": "trigger",
+      "language": "plpgsql",
+      "definition": "BEGIN NEW.updated_at = NOW(); RETURN NEW; END;"
+    },
+    {
+      "name": "generate_order_number",
+      "returns": "text",
+      "language": "plpgsql",
+      "definition": "DECLARE new_number TEXT; counter INTEGER; BEGIN SELECT COALESCE(MAX(CAST(SUBSTRING(order_number FROM 9) AS INTEGER)), 0) + 1 INTO counter FROM public.orders WHERE order_number LIKE TO_CHAR(NOW(), 'YYYYMMDD') || '%'; new_number := TO_CHAR(NOW(), 'YYYYMMDD') || LPAD(counter::TEXT, 4, '0'); RETURN new_number; END;"
+    },
+    {
+      "name": "set_order_number",
+      "returns": "trigger",
+      "language": "plpgsql",
+      "definition": "BEGIN IF NEW.order_number IS NULL OR NEW.order_number = '' THEN NEW.order_number := generate_order_number(); END IF; RETURN NEW; END;"
+    },
+    {
+      "name": "calculate_distance",
+      "returns": "decimal",
+      "language": "plpgsql",
+      "parameters": [
+        {"name": "lat1", "type": "decimal"},
+        {"name": "lon1", "type": "decimal"},
+        {"name": "lat2", "type": "decimal"},
+        {"name": "lon2", "type": "decimal"}
+      ],
+      "definition": "BEGIN RETURN ST_Distance(ST_GeogFromText('POINT(' || lon1 || ' ' || lat1 || ')'), ST_GeogFromText('POINT(' || lon2 || ' ' || lat2 || ')')) / 1000; END;"
+    },
+    {
+      "name": "calculate_delivery_fee",
+      "returns": "decimal",
+      "language": "plpgsql",
+      "parameters": [
+        {"name": "pickup_lat", "type": "decimal"},
+        {"name": "pickup_lon", "type": "decimal"},
+        {"name": "delivery_lat", "type": "decimal"},
+        {"name": "delivery_lon", "type": "decimal"}
+      ],
+      "definition": "DECLARE distance DECIMAL; base_fee DECIMAL := 500.00; per_km_fee DECIMAL := 100.00; BEGIN distance := calculate_distance(pickup_lat, pickup_lon, delivery_lat, delivery_lon); IF distance < 2 THEN RETURN base_fee; END IF; RETURN base_fee + (distance * per_km_fee); END;"
+    },
+    {
+      "name": "find_nearby_couriers",
+      "returns": "table",
+      "language": "plpgsql",
+      "security_definer": true,
+      "parameters": [
+        {"name": "pickup_lat", "type": "decimal"},
+        {"name": "pickup_lon", "type": "decimal"},
+        {"name": "radius_km", "type": "decimal", "default": "10"}
+      ],
+      "definition": "BEGIN RETURN QUERY SELECT c.id, c.user_id, ST_Distance(c.current_location, ST_GeogFromText('POINT(' || pickup_lon || ' ' || pickup_lat || ')')) / 1000 AS distance_km, c.rating FROM public.couriers c WHERE c.is_available = true AND c.is_verified = true AND ST_DWithin(c.current_location, ST_GeogFromText('POINT(' || pickup_lon || ' ' || pickup_lat || ')'), radius_km * 1000) ORDER BY distance_km, c.rating DESC; END;"
+    },
+    {
+      "name": "update_vendor_rating",
+      "returns": "trigger",
+      "language": "plpgsql",
+      "definition": "DECLARE avg_rating DECIMAL; total_reviews INTEGER; BEGIN SELECT COALESCE(AVG(rating), 0), COUNT(*) INTO avg_rating, total_reviews FROM public.reviews WHERE vendor_id = COALESCE(NEW.vendor_id, OLD.vendor_id); UPDATE public.vendors SET rating = avg_rating WHERE id = COALESCE(NEW.vendor_id, OLD.vendor_id); RETURN COALESCE(NEW, OLD); END;"
+    },
+    {
+      "name": "update_courier_rating",
+      "returns": "trigger",
+      "language": "plpgsql",
+      "definition": "DECLARE avg_rating DECIMAL; BEGIN SELECT COALESCE(AVG(rating), 0) INTO avg_rating FROM public.reviews WHERE courier_id = COALESCE(NEW.courier_id, OLD.courier_id); UPDATE public.couriers SET rating = avg_rating WHERE id = COALESCE(NEW.courier_id, OLD.courier_id); RETURN COALESCE(NEW, OLD); END;"
+    },
+    {
+      "name": "create_notification",
+      "returns": "uuid",
+      "language": "plpgsql",
+      "security_definer": true,
+      "parameters": [
+        {"name": "user_id", "type": "uuid"},
+        {"name": "title", "type": "text"},
+        {"name": "message", "type": "text"},
+        {"name": "notification_type", "type": "text", "default": "'general'"},
+        {"name": "data", "type": "jsonb", "default": "'{}'::jsonb"}
+      ],
+      "definition": "DECLARE notification_id UUID; BEGIN INSERT INTO public.notifications (user_id, title, message, type, data) VALUES (user_id, title, message, notification_type, data) RETURNING id INTO notification_id; RETURN notification_id; END;"
+    },
+    {
+      "name": "notify_order_status_change",
+      "returns": "trigger",
+      "language": "plpgsql",
+      "definition": "BEGIN IF NEW.status != OLD.status THEN PERFORM create_notification(NEW.customer_id, 'Atualização do Pedido #' || NEW.order_number, 'Seu pedido foi ' || CASE NEW.status WHEN 'confirmed' THEN 'confirmado' WHEN 'preparing' THEN 'está sendo preparado' WHEN 'in_transit' THEN 'saiu para entrega' WHEN 'delivered' THEN 'entregue' WHEN 'cancelled' THEN 'cancelado' ELSE 'atualizado' END, 'order_update', jsonb_build_object('order_id', NEW.id, 'status', NEW.status)); END IF; RETURN NEW; END;"
+    },
+    {
+      "name": "get_user_role",
+      "returns": "user_role",
+      "language": "sql",
+      "security_definer": true,
+      "parameters": [
+        {"name": "user_id", "type": "uuid"}
+      ],
+      "definition": "SELECT role FROM public.profiles WHERE id = user_id;"
+    },
+    {
+      "name": "is_profile_owner",
+      "returns": "boolean",
+      "language": "sql",
+      "security_definer": true,
+      "parameters": [
+        {"name": "profile_id", "type": "uuid"}
+      ],
+      "definition": "SELECT auth.uid() = profile_id;"
+    }
+  ],
+  "triggers": [
+    {
+      "name": "update_profiles_updated_at",
+      "table": "profiles",
+      "when": "before update",
+      "for_each": "row",
+      "execute_function": "update_updated_at_column"
+    },
+    {
+      "name": "update_vendors_updated_at",
+      "table": "vendors",
+      "when": "before update",
+      "for_each": "row",
+      "execute_function": "update_updated_at_column"
+    },
+    {
+      "name": "update_couriers_updated_at",
+      "table": "couriers",
+      "when": "before update",
+      "for_each": "row",
+      "execute_function": "update_updated_at_column"
+    },
+    {
+      "name": "update_products_updated_at",
+      "table": "products",
+      "when": "before update",
+      "for_each": "row",
+      "execute_function": "update_updated_at_column"
+    },
+    {
+      "name": "update_orders_updated_at",
+      "table": "orders",
+      "when": "before update",
+      "for_each": "row",
+      "execute_function": "update_updated_at_column"
+    },
+    {
+      "name": "update_payments_updated_at",
+      "table": "payments",
+      "when": "before update",
+      "for_each": "row",
+      "execute_function": "update_updated_at_column"
+    },
+    {
+      "name": "set_order_number_trigger",
+      "table": "orders",
+      "when": "before insert",
+      "for_each": "row",
+      "execute_function": "set_order_number"
+    },
+    {
+      "name": "update_vendor_rating_trigger",
+      "table": "reviews",
+      "when": "after insert or update or delete",
+      "for_each": "row",
+      "when_condition": "NEW.vendor_id IS NOT NULL OR OLD.vendor_id IS NOT NULL",
+      "execute_function": "update_vendor_rating"
+    },
+    {
+      "name": "update_courier_rating_trigger",
+      "table": "reviews",
+      "when": "after insert or update or delete",
+      "for_each": "row",
+      "when_condition": "NEW.courier_id IS NOT NULL OR OLD.courier_id IS NOT NULL",
+      "execute_function": "update_courier_rating"
+    },
+    {
+      "name": "notify_order_status_change_trigger",
+      "table": "orders",
+      "when": "after update",
+      "for_each": "row",
+      "execute_function": "notify_order_status_change"
+    }
+  ],
+  "rls_policies": [
+    {
+      "table": "profiles",
+      "policies": [
+        {
+          "name": "Users can view own profile",
+          "type": "select",
+          "using": "auth.uid() = id"
+        },
+        {
+          "name": "Users can update own profile",
+          "type": "update",
+          "using": "auth.uid() = id"
+        },
+        {
+          "name": "Admins can view all profiles",
+          "type": "select",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        },
+        {
+          "name": "Admins can update all profiles",
+          "type": "update",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        },
+        {
+          "name": "Public profiles for vendors/couriers",
+          "type": "select",
+          "using": "role IN ('vendor', 'courier') AND is_active = true"
+        }
+      ]
+    },
+    {
+      "table": "vendors",
+      "policies": [
+        {
+          "name": "Vendors can manage own data",
+          "type": "all",
+          "using": "user_id = auth.uid()"
+        },
+        {
+          "name": "Public can view active vendors",
+          "type": "select",
+          "using": "is_active = true AND is_verified = true"
+        },
+        {
+          "name": "Admins can manage all vendors",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "couriers",
+      "policies": [
+        {
+          "name": "Couriers can manage own data",
+          "type": "all",
+          "using": "user_id = auth.uid()"
+        },
+        {
+          "name": "Vendors can view available couriers",
+          "type": "select",
+          "using": "is_available = true AND is_verified = true AND public.get_user_role(auth.uid()) IN ('vendor', 'admin')"
+        },
+        {
+          "name": "Admins can manage all couriers",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "products",
+      "policies": [
+        {
+          "name": "Vendors can manage own products",
+          "type": "all",
+          "using": "vendor_id IN (SELECT id FROM public.vendors WHERE user_id = auth.uid())"
+        },
+        {
+          "name": "Public can view available products",
+          "type": "select",
+          "using": "is_available = true"
+        },
+        {
+          "name": "Admins can manage all products",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "orders",
+      "policies": [
+        {
+          "name": "Customers can view own orders",
+          "type": "select",
+          "using": "customer_id = auth.uid()"
+        },
+        {
+          "name": "Customers can create orders",
+          "type": "insert",
+          "with_check": "customer_id = auth.uid()"
+        },
+        {
+          "name": "Vendors can view orders for their products",
+          "type": "select",
+          "using": "vendor_id IN (SELECT id FROM public.vendors WHERE user_id = auth.uid())"
+        },
+        {
+          "name": "Vendors can update orders for their products",
+          "type": "update",
+          "using": "vendor_id IN (SELECT id FROM public.vendors WHERE user_id = auth.uid())"
+        },
+        {
+          "name": "Couriers can view assigned orders",
+          "type": "select",
+          "using": "courier_id IN (SELECT id FROM public.couriers WHERE user_id = auth.uid())"
+        },
+        {
+          "name": "Couriers can update assigned orders",
+          "type": "update",
+          "using": "courier_id IN (SELECT id FROM public.couriers WHERE user_id = auth.uid())"
+        },
+        {
+          "name": "Admins can manage all orders",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "payments",
+      "policies": [
+        {
+          "name": "Users can view own payments",
+          "type": "select",
+          "using": "order_id IN (SELECT id FROM public.orders WHERE customer_id = auth.uid())"
+        },
+        {
+          "name": "Vendors can view payments for their orders",
+          "type": "select",
+          "using": "order_id IN (SELECT o.id FROM public.orders o INNER JOIN public.vendors v ON o.vendor_id = v.id WHERE v.user_id = auth.uid())"
+        },
+        {
+          "name": "Admins can manage all payments",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "notifications",
+      "policies": [
+        {
+          "name": "Users can view own notifications",
+          "type": "select",
+          "using": "user_id = auth.uid()"
+        },
+        {
+          "name": "Users can update own notifications",
+          "type": "update",
+          "using": "user_id = auth.uid()"
+        },
+        {
+          "name": "System can create notifications",
+          "type": "insert",
+          "with_check": "true"
+        }
+      ]
+    },
+    {
+      "table": "reviews",
+      "policies": [
+        {
+          "name": "Users can view reviews",
+          "type": "select",
+          "using": "true"
+        },
+        {
+          "name": "Users can create reviews for own orders",
+          "type": "insert",
+          "with_check": "reviewer_id = auth.uid() AND order_id IN (SELECT id FROM public.orders WHERE customer_id = auth.uid())"
+        },
+        {
+          "name": "Admins can manage all reviews",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "operational_playbooks",
+      "policies": [
+        {
+          "name": "Users can view active playbooks",
+          "type": "select",
+          "using": "is_active = true"
+        },
+        {
+          "name": "Admins can manage all playbooks",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "playbook_steps",
+      "policies": [
+        {
+          "name": "Users can view steps for active playbooks",
+          "type": "select",
+          "using": "playbook_id IN (SELECT id FROM public.operational_playbooks WHERE is_active = true)"
+        },
+        {
+          "name": "Admins can manage all steps",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "operational_incidents",
+      "policies": [
+        {
+          "name": "Users can view own incidents",
+          "type": "select",
+          "using": "reported_by = auth.uid() OR assigned_to = auth.uid()"
+        },
+        {
+          "name": "Users can create incidents",
+          "type": "insert",
+          "with_check": "true"
+        },
+        {
+          "name": "Users can update own incidents",
+          "type": "update",
+          "using": "reported_by = auth.uid() OR assigned_to = auth.uid()"
+        },
+        {
+          "name": "Admins can manage all incidents",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "alerts",
+      "policies": [
+        {
+          "name": "Users can view own alerts",
+          "type": "select",
+          "using": "user_id = auth.uid() OR user_id IS NULL"
+        },
+        {
+          "name": "Users can update own alerts",
+          "type": "update",
+          "using": "user_id = auth.uid()"
+        },
+        {
+          "name": "System can create alerts",
+          "type": "insert",
+          "with_check": "true"
+        },
+        {
+          "name": "Admins can manage all alerts",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "alert_configs",
+      "policies": [
+        {
+          "name": "Users can view own alert configs",
+          "type": "select",
+          "using": "user_id = auth.uid()"
+        },
+        {
+          "name": "Users can create alert configs",
+          "type": "insert",
+          "with_check": "user_id = auth.uid()"
+        },
+        {
+          "name": "Users can update own alert configs",
+          "type": "update",
+          "using": "user_id = auth.uid()"
+        },
+        {
+          "name": "Admins can manage all alert configs",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "metrics",
+      "policies": [
+        {
+          "name": "Authenticated users can view metrics",
+          "type": "select",
+          "using": "auth.uid() IS NOT NULL"
+        },
+        {
+          "name": "System can insert metrics",
+          "type": "insert",
+          "with_check": "true"
+        },
+        {
+          "name": "Admins can manage all metrics",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "price_history",
+      "policies": [
+        {
+          "name": "Users can view price history",
+          "type": "select",
+          "using": "true"
+        },
+        {
+          "name": "System can insert price history",
+          "type": "insert",
+          "with_check": "true"
+        },
+        {
+          "name": "Admins can manage all price history",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "audit_logs",
+      "policies": [
+        {
+          "name": "Users can view own audit logs",
+          "type": "select",
+          "using": "user_id = auth.uid()"
+        },
+        {
+          "name": "System can insert audit logs",
+          "type": "insert",
+          "with_check": "true"
+        },
+        {
+          "name": "Admins can manage all audit logs",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "encryption_keys",
+      "policies": [
+        {
+          "name": "Only admins can view encryption keys",
+          "type": "select",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        },
+        {
+          "name": "Only admins can manage encryption keys",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "compliance_reports",
+      "policies": [
+        {
+          "name": "Only admins can view compliance reports",
+          "type": "select",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        },
+        {
+          "name": "Only admins can manage compliance reports",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "security_policies",
+      "policies": [
+        {
+          "name": "Only admins can view security policies",
+          "type": "select",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        },
+        {
+          "name": "Only admins can manage security policies",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "security_rules",
+      "policies": [
+        {
+          "name": "Only admins can view security rules",
+          "type": "select",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        },
+        {
+          "name": "Only admins can manage security rules",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    },
+    {
+      "table": "user_audit_logs",
+      "policies": [
+        {
+          "name": "Users can view own audit logs",
+          "type": "select",
+          "using": "user_id = auth.uid()"
+        },
+        {
+          "name": "System can insert audit logs",
+          "type": "insert",
+          "with_check": "true"
+        },
+        {
+          "name": "Admins can manage all audit logs",
+          "type": "all",
+          "using": "public.get_user_role(auth.uid()) = 'admin'"
+        }
+      ]
+    }
+  ],
+  "storage": {
+    "buckets": [
+      {
+        "name": "avatars",
+        "public": false,
+        "file_size_limit": "2MB",
+        "allowed_mime_types": ["image/jpeg", "image/png", "image/webp"]
+      },
+      {
+        "name": "product-images",
+        "public": true,
+        "file_size_limit": "5MB",
+        "allowed_mime_types": ["image/jpeg", "image/png", "image/webp"]
+      },
+      {
+        "name": "documents",
+        "public": false,
+        "file_size_limit": "10MB",
+        "allowed_mime_types": ["application/pdf", "image/jpeg", "image/png"]
+      }
+    ]
+  },
+  "auth": {
+    "email_signup_enabled": true,
+    "phone_signup_enabled": true,
+    "email_confirm_signup": true,
+    "phone_confirm_signup": true,
+    "secure_password_auth": true,
+    "mfa_enabled": true
+  }
+}

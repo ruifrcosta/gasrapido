@@ -10,3 +10,10 @@ export * from './components/common/Loading';
 
 // MFA Components
 export * from './MfaSetupComponent';
+
+// Dashboard Components
+export { default as OperationalDashboardComponent } from './OperationalDashboardComponent';
+export { default as FinancialDashboardComponent } from './FinancialDashboardComponent';
+export { default as UserManagementComponent } from './UserManagementComponent';
+export { default as OperationalPlaybooksComponent } from './OperationalPlaybooksComponent';
+export { default as SecurityComplianceComponent } from './SecurityComplianceComponent';

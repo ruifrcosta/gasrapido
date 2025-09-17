@@ -4,19 +4,21 @@ import { View, StyleSheet } from 'react-native';
 import AdminDashboardComponent from '@gasrapido/ui/src/AdminDashboardComponent';
 import { useAuth } from '../contexts/AuthContext';
 import { useSupabase } from '../contexts/SupabaseContext';
-import { IntelligenceEngineService } from '@gasrapido/shared';
+import { IntelligenceEngineService, MetricsService } from '@gasrapido/shared';
 
 const AdminDashboardScreen = () => {
   const { user } = useAuth();
   const { supabase } = useSupabase();
   
   const intelligenceEngineService = new IntelligenceEngineService(supabase);
+  const metricsService = new MetricsService(supabase);
 
   return (
     <View style={styles.container}>
       <AdminDashboardComponent 
         userId={user?.id || 'unknown-user'}
         intelligenceEngineService={intelligenceEngineService}
+        metricsService={metricsService}
       />
     </View>
   );

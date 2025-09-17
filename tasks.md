@@ -92,10 +92,10 @@
   - [x] Desenvolver comunicação clara de valores
 
 ### Testes e Simulação
-- [ ] Desenvolver sistema de testes e simulação para o motor de precificação
-  - [ ] Criar ambiente de testes
-  - [ ] Implementar simulações de cenários
-  - [ ] Desenvolver métricas de avaliação
+- [x] Desenvolver sistema de testes e simulação para o motor de precificação
+  - [x] Criar ambiente de testes
+  - [x] Implementar simulações de cenários
+  - [x] Desenvolver métricas de avaliação
 
 ### Dashboards e Métricas
 - [ ] Criar dashboards e métricas de monitoramento para admin, ops e finanças

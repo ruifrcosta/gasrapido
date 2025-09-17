@@ -1,21 +1,41 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Card, Button } from './components/common';
 import AdminOverrideControlsComponent from './AdminOverrideControlsComponent';
 import IntelligenceEngineManagementComponent from './IntelligenceEngineManagementComponent';
-import { IntelligenceEngineService } from '@gasrapido/shared';
+import { IntelligenceEngineService, MetricsService, DashboardMetrics } from '@gasrapido/shared';
 
 interface AdminDashboardComponentProps {
   userId: string;
   intelligenceEngineService: IntelligenceEngineService;
+  metricsService: MetricsService;
 }
 
 const AdminDashboardComponent: React.FC<AdminDashboardComponentProps> = ({
   userId,
-  intelligenceEngineService
+  intelligenceEngineService,
+  metricsService
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'overrides' | 'intelligence'>('overview');
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [loadingMetrics, setLoadingMetrics] = useState(true);
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        setLoadingMetrics(true);
+        const dashboardMetrics = await metricsService.getDashboardMetrics();
+        setMetrics(dashboardMetrics);
+      } catch (error) {
+        console.error('Error fetching metrics:', error);
+      } finally {
+        setLoadingMetrics(false);
+      }
+    };
+
+    fetchMetrics();
+  }, [metricsService]);
 
   const renderOverview = () => (
     <ScrollView>
@@ -23,18 +43,24 @@ const AdminDashboardComponent: React.FC<AdminDashboardComponentProps> = ({
       
       <View style={styles.statsContainer}>
         <Card style={styles.statCard}>
-          <Text style={styles.statValue}>24</Text>
-          <Text style={styles.statLabel}>Alertas Ativos</Text>
+          <Text style={styles.statValue}>
+            {loadingMetrics ? '...' : metrics?.activeUsers || '0'}
+          </Text>
+          <Text style={styles.statLabel}>Usuários Ativos</Text>
         </Card>
         
         <Card style={styles.statCard}>
-          <Text style={styles.statValue}>12</Text>
-          <Text style={styles.statLabel}>Overrides Pendentes</Text>
+          <Text style={styles.statValue}>
+            {loadingMetrics ? '...' : metrics?.pendingOrders || '0'}
+          </Text>
+          <Text style={styles.statLabel}>Pedidos Pendentes</Text>
         </Card>
         
         <Card style={styles.statCard}>
-          <Text style={styles.statValue}>8</Text>
-          <Text style={styles.statLabel}>Políticas Ativas</Text>
+          <Text style={styles.statValue}>
+            {loadingMetrics ? '...' : metrics?.activeDeliveries || '0'}
+          </Text>
+          <Text style={styles.statLabel}>Entregas Ativas</Text>
         </Card>
       </View>
       
