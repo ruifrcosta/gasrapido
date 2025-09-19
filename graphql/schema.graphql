@@ -1,0 +1,520 @@
+# GasRápido GraphQL Schema
+
+type Query {
+  # User queries
+  user(id: ID!): User
+  users(filter: UserFilter, limit: Int, offset: Int): [User!]!
+  currentUser: User
+  
+  # Order queries
+  order(id: ID!): Order
+  orders(filter: OrderFilter, limit: Int, offset: Int): [Order!]!
+  orderHistory(userId: ID!): [Order!]!
+  
+  # Product queries
+  product(id: ID!): Product
+  products(filter: ProductFilter, limit: Int, offset: Int): [Product!]!
+  
+  # Courier queries
+  courier(id: ID!): Courier
+  couriers(filter: CourierFilter, limit: Int, offset: Int): [Courier!]!
+  
+  # Supplier queries
+  supplier(id: ID!): Supplier
+  suppliers(filter: SupplierFilter, limit: Int, offset: Int): [Supplier!]!
+  
+  # Invitation queries
+  invitation(code: String!): Invitation
+  invitations(filter: InvitationFilter, limit: Int, offset: Int): [Invitation!]!
+  
+  # Verification queries
+  verificationStatus(userId: ID!): VerificationStatus
+  verificationDocuments(userId: ID!): [VerificationDocument!]!
+  
+  # Notification queries
+  notifications(limit: Int, offset: Int): [Notification!]!
+  unreadNotificationsCount: Int!
+  
+  # Analytics queries
+  metrics(filter: MetricsFilter): Metrics
+  reports(filter: ReportFilter): [Report!]!
+}
+
+type Mutation {
+  # User mutations
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+  changeUserStatus(id: ID!, status: UserStatus!): User!
+  
+  # Order mutations
+  createOrder(input: CreateOrderInput!): Order!
+  updateOrder(id: ID!, input: UpdateOrderInput!): Order!
+  cancelOrder(id: ID!): Order!
+  updateOrderStatus(id: ID!, status: OrderStatus!): Order!
+  
+  # Product mutations
+  createProduct(input: CreateProductInput!): Product!
+  updateProduct(id: ID!, input: UpdateProductInput!): Product!
+  deleteProduct(id: ID!): Boolean!
+  
+  # Courier mutations
+  createCourier(input: CreateCourierInput!): Courier!
+  updateCourier(id: ID!, input: UpdateCourierInput!): Courier!
+  assignCourier(orderId: ID!, courierId: ID!): Order!
+  
+  # Supplier mutations
+  createSupplier(input: CreateSupplierInput!): Supplier!
+  updateSupplier(id: ID!, input: UpdateSupplierInput!): Supplier!
+  
+  # Invitation mutations
+  createInvitation(input: CreateInvitationInput!): Invitation!
+  acceptInvitation(code: String!): Invitation!
+  revokeInvitation(id: ID!): Invitation!
+  
+  # Verification mutations
+  uploadVerificationDocument(input: UploadDocumentInput!): VerificationDocument!
+  submitForVerification: VerificationRequest!
+  reviewVerificationDocument(id: ID!, status: DocumentStatus!, rejectionReason: String): VerificationDocument!
+  updateVerificationRequest(id: ID!, status: VerificationRequestStatus!, rejectionReason: String): VerificationRequest!
+  
+  # Notification mutations
+  markNotificationAsRead(id: ID!): Notification!
+  markAllNotificationsAsRead: Boolean!
+  
+  # Analytics mutations
+  generateReport(input: GenerateReportInput!): Report!
+}
+
+# Types
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  phone: String
+  role: UserRole!
+  status: UserStatus!
+  createdAt: String!
+  updatedAt: String!
+  lastLoginAt: String
+  profilePicture: String
+  address: Address
+  orders: [Order!]!
+  notifications: [Notification!]!
+}
+
+type Order {
+  id: ID!
+  userId: ID!
+  productId: ID!
+  productName: String!
+  quantity: Int!
+  unitPrice: Float!
+  totalPrice: Float!
+  status: OrderStatus!
+  deliveryAddress: Address!
+  courierId: ID
+  supplierId: ID!
+  createdAt: String!
+  updatedAt: String!
+  deliveredAt: String
+  estimatedDeliveryTime: String
+  trackingInfo: [TrackingEvent!]!
+}
+
+type Product {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  supplierId: ID!
+  supplier: Supplier!
+  category: String!
+  stock: Int!
+  image: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Courier {
+  id: ID!
+  userId: ID!
+  name: String!
+  phone: String!
+  vehicleType: String!
+  licensePlate: String!
+  status: CourierStatus!
+  currentLocation: Location
+  assignedOrders: [Order!]!
+  completedDeliveries: Int!
+  rating: Float
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Supplier {
+  id: ID!
+  userId: ID!
+  name: String!
+  phone: String!
+  address: Address!
+  products: [Product!]!
+  rating: Float
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Invitation {
+  id: ID!
+  code: String!
+  type: InvitationType!
+  email: String!
+  invitedBy: ID!
+  acceptedBy: ID
+  status: InvitationStatus!
+  expiresAt: String!
+  acceptedAt: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type VerificationStatus {
+  userId: ID!
+  status: VerificationRequestStatus!
+  documents: [VerificationDocument!]!
+  lastUpdated: String!
+  rejectionReason: String
+}
+
+type VerificationDocument {
+  id: ID!
+  userId: ID!
+  documentType: DocumentType!
+  fileName: String!
+  mimeType: String!
+  fileSize: Int!
+  status: DocumentStatus!
+  rejectionReason: String
+  uploadedAt: String!
+  reviewedAt: String
+  reviewedBy: ID
+  url: String
+}
+
+type Notification {
+  id: ID!
+  userId: ID!
+  title: String!
+  message: String!
+  type: NotificationType!
+  read: Boolean!
+  createdAt: String!
+  actionUrl: String
+}
+
+type Metrics {
+  totalUsers: Int!
+  totalOrders: Int!
+  totalRevenue: Float!
+  activeOrders: Int!
+  completedOrders: Int!
+  cancelledOrders: Int!
+  userGrowth: [TimeSeriesData!]!
+  revenueGrowth: [TimeSeriesData!]!
+  orderGrowth: [TimeSeriesData!]!
+}
+
+type Report {
+  id: ID!
+  name: String!
+  type: ReportType!
+  data: JSON!
+  generatedAt: String!
+  filters: JSON
+}
+
+type TrackingEvent {
+  id: ID!
+  orderId: ID!
+  status: OrderStatus!
+  location: Location
+  timestamp: String!
+  description: String!
+}
+
+# Input Types
+
+input CreateUserInput {
+  email: String!
+  name: String!
+  phone: String
+  role: UserRole!
+  password: String!
+  address: AddressInput
+}
+
+input UpdateUserInput {
+  name: String
+  phone: String
+  address: AddressInput
+  profilePicture: String
+}
+
+input CreateOrderInput {
+  userId: ID!
+  productId: ID!
+  quantity: Int!
+  deliveryAddress: AddressInput!
+}
+
+input UpdateOrderInput {
+  quantity: Int
+  deliveryAddress: AddressInput
+}
+
+input CreateProductInput {
+  name: String!
+  description: String!
+  price: Float!
+  supplierId: ID!
+  category: String!
+  stock: Int!
+  image: String
+}
+
+input UpdateProductInput {
+  name: String
+  description: String
+  price: Float
+  category: String
+  stock: Int
+  image: String
+}
+
+input CreateCourierInput {
+  userId: ID!
+  name: String!
+  phone: String!
+  vehicleType: String!
+  licensePlate: String!
+}
+
+input UpdateCourierInput {
+  name: String
+  phone: String
+  vehicleType: String
+  licensePlate: String
+  currentLocation: LocationInput
+}
+
+input CreateSupplierInput {
+  userId: ID!
+  name: String!
+  phone: String!
+  address: AddressInput!
+}
+
+input UpdateSupplierInput {
+  name: String
+  phone: String
+  address: AddressInput
+}
+
+input CreateInvitationInput {
+  type: InvitationType!
+  email: String!
+  invitedById: ID!
+  expiryDays: Int
+}
+
+input UploadDocumentInput {
+  userId: ID!
+  documentType: DocumentType!
+  fileName: String!
+  mimeType: String!
+  fileSize: Int!
+}
+
+input GenerateReportInput {
+  type: ReportType!
+  startDate: String
+  endDate: String
+  filters: JSON
+}
+
+# Filter Types
+
+input UserFilter {
+  role: UserRole
+  status: UserStatus
+  search: String
+}
+
+input OrderFilter {
+  userId: ID
+  status: OrderStatus
+  productId: ID
+  supplierId: ID
+  courierId: ID
+  dateFrom: String
+  dateTo: String
+}
+
+input ProductFilter {
+  supplierId: ID
+  category: String
+  search: String
+  minPrice: Float
+  maxPrice: Float
+}
+
+input CourierFilter {
+  status: CourierStatus
+  search: String
+}
+
+input SupplierFilter {
+  search: String
+}
+
+input InvitationFilter {
+  type: InvitationType
+  status: InvitationStatus
+  email: String
+}
+
+input MetricsFilter {
+  startDate: String
+  endDate: String
+  interval: String
+}
+
+input ReportFilter {
+  type: ReportType
+  dateFrom: String
+  dateTo: String
+}
+
+# Enums
+
+enum UserRole {
+  CLIENT
+  VENDOR
+  COURIER
+  ADMIN
+}
+
+enum UserStatus {
+  NEW
+  PENDING_DOCUMENTS
+  VERIFIED
+  ACTIVE
+  REJECTED
+  BLOCKED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+enum CourierStatus {
+  AVAILABLE
+  BUSY
+  OFFLINE
+}
+
+enum InvitationType {
+  CLIENT
+  VENDOR
+  COURIER
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+
+enum DocumentType {
+  ID
+  LICENSE
+  INSURANCE
+  VEHICLE_REGISTRATION
+}
+
+enum DocumentStatus {
+  PENDING
+  UPLOADED
+  APPROVED
+  REJECTED
+}
+
+enum VerificationRequestStatus {
+  PENDING
+  IN_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  ORDER
+  SYSTEM
+  ALERT
+  VERIFICATION
+}
+
+enum ReportType {
+  USER_METRICS
+  ORDER_METRICS
+  REVENUE_METRICS
+  PERFORMANCE
+}
+
+# Scalar Types
+
+scalar JSON
+scalar Date
+
+# Object Types
+
+type Address {
+  street: String!
+  city: String!
+  state: String!
+  zipCode: String!
+  country: String!
+  coordinates: Location
+}
+
+type Location {
+  lat: Float!
+  lng: Float!
+}
+
+type TimeSeriesData {
+  timestamp: String!
+  value: Float!
+}
+
+# Input Object Types
+
+input AddressInput {
+  street: String!
+  city: String!
+  state: String!
+  zipCode: String!
+  country: String!
+  coordinates: LocationInput
+}
+
+input LocationInput {
+  lat: Float!
+  lng: Float!
+}

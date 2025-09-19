@@ -17,3 +17,5 @@ export { default as FinancialDashboardComponent } from './FinancialDashboardComp
 export { default as UserManagementComponent } from './UserManagementComponent';
 export { default as OperationalPlaybooksComponent } from './OperationalPlaybooksComponent';
 export { default as SecurityComplianceComponent } from './SecurityComplianceComponent';
+export { default as ComprehensiveDashboardComponent } from './ComprehensiveDashboardComponent';
+export { default as AdminPortalComponent } from './AdminPortalComponent';

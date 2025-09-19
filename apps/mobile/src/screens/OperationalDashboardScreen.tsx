@@ -1,17 +1,19 @@
-// @ts-nocheck
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import OperationalDashboardComponent from '@gasrapido/ui/src/OperationalDashboardComponent';
-import { useSupabase } from '../contexts/SupabaseContext';
-import { MetricsService } from '@gasrapido/shared';
+import { ComprehensiveDashboardComponent } from '@gasrapido/ui';
+import { supabase } from '@gasrapido/shared/src/services/supabase';
+import { MetricsService } from '@gasrapido/shared/src/services/metricsService';
+
+// Create metrics service instance
+const metricsService = new MetricsService(supabase);
 
 const OperationalDashboardScreen = () => {
-  const { supabase } = useSupabase();
-  const metricsService = new MetricsService(supabase);
-
   return (
     <View style={styles.container}>
-      <OperationalDashboardComponent metricsService={metricsService} />
+      <ComprehensiveDashboardComponent 
+        metricsService={metricsService}
+        userRole="ops"
+      />
     </View>
   );
 };

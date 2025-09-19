@@ -1,0 +1,54 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'gasrapido-web'
+    static_configs:
+      - targets: ['gasrapido-web-service:3000']
+
+  - job_name: 'gasrapido-mobile'
+    static_configs:
+      - targets: ['gasrapido-mobile-service:19006']
+
+  - job_name: 'supabase-db'
+    static_configs:
+      - targets: ['supabase-db-service:5432']
+
+  - job_name: 'supabase-auth'
+    static_configs:
+      - targets: ['supabase-auth-service:9999']
+
+  - job_name: 'supabase-storage'
+    static_configs:
+      - targets: ['supabase-storage:5000']
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+
+  - job_name: 'rabbitmq-exporter'
+    static_configs:
+      - targets: ['rabbitmq-exporter:9419']
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+#rule_files:
+#  - "alert_rules.yml"

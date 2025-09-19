@@ -72,7 +72,6 @@ Based on tasks.md, the following major components are completed:
 - Need to complete integration of maps, payments, and notifications
 - Deployment configurations need to be finalized
 - Some testing and simulation systems need to be developed
-- Administrative portal requires implementation
 
 ## Testing Status
 - Core functionality tested during development

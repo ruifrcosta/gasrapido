@@ -1,0 +1,306 @@
+version: '3.8'
+
+services:
+  # Web application (scaled to 3 instances for load balancing)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web-production
+    ports:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - supabase
+      - consul
+    volumes:
+      - ./apps/web/.next:/app/apps/web/.next
+      - ./packages/shared:/app/packages/shared
+      - ./packages/ui:/app/packages/ui
+
+  web2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web-production
+    ports:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - supabase
+      - consul
+    volumes:
+      - ./apps/web/.next:/app/apps/web/.next
+      - ./packages/shared:/app/packages/shared
+      - ./packages/ui:/app/packages/ui
+
+  web3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web-production
+    ports:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - supabase
+      - consul
+    volumes:
+      - ./apps/web/.next:/app/apps/web/.next
+      - ./packages/shared:/app/packages/shared
+      - ./packages/ui:/app/packages/ui
+
+  # Mobile application (scaled to 2 instances for load balancing)
+  mobile:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: mobile-production
+    ports:
+      - "19006"
+    environment:
+      - NODE_ENV=production
+      - EXPO_PUBLIC_SUPABASE_URL=${EXPO_PUBLIC_SUPABASE_URL}
+      - EXPO_PUBLIC_SUPABASE_ANON_KEY=${EXPO_PUBLIC_SUPABASE_ANON_KEY}
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - supabase
+      - consul
+    volumes:
+      - ./apps/mobile/dist:/app/apps/mobile/dist
+      - ./packages/shared:/app/packages/shared
+      - ./packages/ui:/app/packages/ui
+
+  mobile2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: mobile-production
+    ports:
+      - "19006"
+    environment:
+      - NODE_ENV=production
+      - EXPO_PUBLIC_SUPABASE_URL=${EXPO_PUBLIC_SUPABASE_URL}
+      - EXPO_PUBLIC_SUPABASE_ANON_KEY=${EXPO_PUBLIC_SUPABASE_ANON_KEY}
+      - CONSUL_HTTP_ADDR=consul:8500
+    depends_on:
+      - supabase
+      - consul
+    volumes:
+      - ./apps/mobile/dist:/app/apps/mobile/dist
+      - ./packages/shared:/app/packages/shared
+      - ./packages/ui:/app/packages/ui
+
+  # NGINX Load Balancer
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - web
+      - web2
+      - web3
+      - mobile
+      - mobile2
+    restart: unless-stopped
+
+  # Supabase services
+  supabase:
+    image: supabase/postgres:15.1.0.147
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - supabase_db_data:/var/lib/postgresql/data
+      - ./supabase/migrations:/docker-entrypoint-initdb.d/migrations
+
+  # Supabase Auth
+  supabase-auth:
+    image: supabase/gotrue:v2.69.1
+    ports:
+      - "9999:9999"
+    environment:
+      - GOTRUE_DB_DRIVER=postgres
+      - GOTRUE_DB_DATABASE_URL=postgres://postgres:postgres@supabase:5432/postgres
+      - GOTRUE_JWT_SECRET=super-secret-jwt-token-with-at-least-32-characters-long
+      - GOTRUE_JWT_EXP=3600
+      - GOTRUE_EXTERNAL_EMAIL_ENABLED=true
+      - GOTRUE_EXTERNAL_PHONE_ENABLED=true
+      - GOTRUE_MAILER_AUTOCONFIRM=true
+      - GOTRUE_SMS_AUTOCONFIRM=true
+    depends_on:
+      - supabase
+
+  # Supabase Storage
+  supabase-storage:
+    image: supabase/storage-api:v0.40.1
+    ports:
+      - "5000:5000"
+    environment:
+      - ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SERVICE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - POSTGRES_URL=postgres://postgres:postgres@supabase:5432/postgres
+      - PGRST_JWT_SECRET=super-secret-jwt-token-with-at-least-32-characters-long
+      - FILE_SIZE_LIMIT=52428800
+      - STORAGE_BACKEND=file
+      - FILE_STORAGE_BACKEND_PATH=/var/lib/storage
+      - TENANT_ID=stub
+      - REGION=stub
+      - GLOBAL_S3_BUCKET=stub
+    depends_on:
+      - supabase
+    volumes:
+      - supabase_storage_data:/var/lib/storage
+
+  # Supabase Functions
+  supabase-functions:
+    image: supabase/edge-runtime:v1.29.1
+    ports:
+      - "54321:8081"
+    environment:
+      - SUPABASE_URL=http://supabase:5432
+      - SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - JWT_SECRET=super-secret-jwt-token-with-at-least-32-characters-long
+    depends_on:
+      - supabase
+    volumes:
+      - ./supabase/functions:/home/deno/functions:ro
+
+  # Redis for caching and messaging
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # RabbitMQ for message queuing
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  # Consul for service discovery
+  consul:
+    image: hashicorp/consul:1.16
+    ports:
+      - "8500:8500"
+      - "8600:8600/tcp"
+      - "8600:8600/udp"
+    volumes:
+      - ./consul/config:/consul/config
+      - consul_data:/consul/data
+    command: agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0 -config-file=/consul/config/consul.hcl
+
+  # Monitoring - Prometheus
+  prometheus:
+    image: prom/prometheus:v2.47.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+
+  # Monitoring - Grafana
+  grafana:
+    image: grafana/grafana-enterprise:10.1.0
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+
+  # Logging - ELK Stack
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.9.0
+    ports:
+      - "5044:5044"
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    volumes:
+      - ./monitoring/logstash/pipeline:/usr/share/logstash/pipeline
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.9.0
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  # GraphQL Gateway
+  graphql-gateway:
+    build:
+      context: ./apps/graphql-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - web
+      - mobile
+    restart: unless-stopped
+
+volumes:
+  supabase_db_data:
+  supabase_storage_data:
+  redis_data:
+  rabbitmq_data:
+  consul_data:
+  prometheus_data:
+  grafana_data:
+  elasticsearch_data:

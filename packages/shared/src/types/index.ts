@@ -16,6 +16,18 @@ export type PaymentStatus = z.infer<typeof PaymentStatus>;
 export const PaymentMethod = z.enum(['cash', 'multicaixa', 'card', 'wallet']);
 export type PaymentMethod = z.infer<typeof PaymentMethod>;
 
+// Reservation Type Enum
+export const ReservationType = z.enum(['entrega', 'levantamento']);
+export type ReservationType = z.infer<typeof ReservationType>;
+
+// Reservation Payment Status Enum
+export const ReservationPaymentStatus = z.enum(['pending', 'paid', 'proof_uploaded', 'failed', 'rejected']);
+export type ReservationPaymentStatus = z.infer<typeof ReservationPaymentStatus>;
+
+// Reservation Status Enum
+export const ReservationStatus = z.enum(['pending_reservation', 'payment_pending', 'proof_uploaded', 'confirmed', 'cancelled', 'expired', 'rejected']);
+export type ReservationStatus = z.infer<typeof ReservationStatus>;
+
 // Base User Profile
 export const ProfileSchema = z.object({
   id: z.string().uuid(),
@@ -191,3 +203,119 @@ export const ProcessPaymentRequestSchema = z.object({
   multicaixaReference: z.string().optional(),
 });
 export type ProcessPaymentRequest = z.infer<typeof ProcessPaymentRequestSchema>;
+
+// Payment Method With Proof Enum
+export const PaymentMethodWithProof = z.enum([
+  'multicaixa_express',
+  'kwik',
+  'unitel_money',
+  'paypay',
+  'bank_transfer'
+]);
+export type PaymentMethodWithProof = z.infer<typeof PaymentMethodWithProof>;
+
+// Payment Proof Status Enum
+export const PaymentProofStatus = z.enum([
+  'pending_proof',
+  'pending_verification',
+  'approved',
+  'rejected',
+  'proof_failure'
+]);
+export type PaymentProofStatus = z.infer<typeof PaymentProofStatus>;
+
+// Payment Proof Schema
+export const PaymentProofSchema = z.object({
+  id: z.string().uuid(),
+  user_id: z.string().uuid(),
+  order_id: z.string().uuid(),
+  payment_method: PaymentMethodWithProof,
+  amount: z.number(),
+  currency: z.string().default('AOA'),
+  status: PaymentProofStatus,
+  uploaded_at: z.string(),
+  verified_by: z.string().uuid().nullable(),
+  verified_at: z.string().nullable(),
+  rejection_reason: z.string().nullable(),
+  file_path: z.string(),
+  notes: z.string().nullable(),
+  created_at: z.string(),
+  updated_at: z.string(),
+});
+export type PaymentProof = z.infer<typeof PaymentProofSchema>;
+
+// Upload Payment Proof Request
+export const UploadPaymentProofRequestSchema = z.object({
+  orderId: z.string().uuid(),
+  paymentMethod: PaymentMethodWithProof,
+  amount: z.number(),
+  file: z.instanceof(File),
+  notes: z.string().optional(),
+});
+export type UploadPaymentProofRequest = z.infer<typeof UploadPaymentProofRequestSchema>;
+
+// Verify Payment Proof Request
+export const VerifyPaymentProofRequestSchema = z.object({
+  paymentProofId: z.string().uuid(),
+  status: PaymentProofStatus,
+  rejectionReason: z.string().optional(),
+  notes: z.string().optional(),
+});
+export type VerifyPaymentProofRequest = z.infer<typeof VerifyPaymentProofRequestSchema>;
+
+// Reservation Schema
+export const ReservationSchema = z.object({
+  id: z.string().uuid(),
+  user_id: z.string().uuid(),
+  supplier_id: z.string().uuid().nullable(),
+  type: ReservationType,
+  requested_at: z.string(),
+  pickup_point: z.string().nullable(),
+  delivery_address: z.record(z.any()).nullable(),
+  scheduled_time: z.string(),
+  amount: z.number(),
+  currency: z.string().default('AOA'),
+  payment_method: z.string().nullable(),
+  payment_status: ReservationPaymentStatus,
+  proof_file_path: z.string().nullable(),
+  proof_uploaded_at: z.string().nullable(),
+  verified_by: z.string().uuid().nullable(),
+  verified_at: z.string().nullable(),
+  status: ReservationStatus,
+  notes: z.string().nullable(),
+  created_at: z.string(),
+  updated_at: z.string(),
+});
+export type Reservation = z.infer<typeof ReservationSchema>;
+
+// Create Reservation Request
+export const CreateReservationRequestSchema = z.object({
+  supplierId: z.string().uuid().nullable(),
+  type: ReservationType,
+  pickupPoint: z.string().optional(),
+  deliveryAddress: z.record(z.any()).optional(),
+  scheduledTime: z.string(),
+  amount: z.number(),
+  paymentMethod: z.string(),
+});
+export type CreateReservationRequest = z.infer<typeof CreateReservationRequestSchema>;
+
+// Upload Reservation Proof Request
+export const UploadReservationProofRequestSchema = z.object({
+  reservationId: z.string().uuid(),
+  paymentMethod: z.string(),
+  amount: z.number(),
+  file: z.instanceof(File),
+  notes: z.string().optional(),
+});
+export type UploadReservationProofRequest = z.infer<typeof UploadReservationProofRequestSchema>;
+
+// Verify Reservation Request
+export const VerifyReservationRequestSchema = z.object({
+  reservationId: z.string().uuid(),
+  status: ReservationStatus,
+  paymentStatus: ReservationPaymentStatus,
+  rejectionReason: z.string().optional(),
+  notes: z.string().optional(),
+});
+export type VerifyReservationRequest = z.infer<typeof VerifyReservationRequestSchema>;

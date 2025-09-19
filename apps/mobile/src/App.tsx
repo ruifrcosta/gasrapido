@@ -19,6 +19,8 @@ import AIAgentsManagementScreen from './screens/AIAgentsManagementScreen';
 import IntelligenceEngineManagementScreen from './screens/IntelligenceEngineManagementScreen';
 import MatchingManagementScreen from './screens/MatchingManagementScreen';
 import PricingDashboardScreen from './screens/PricingDashboardScreen';
+import NotificationsScreen from './screens/NotificationsScreen';
+import AIAlertsScreen from './screens/AIAlertsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -106,6 +108,16 @@ const App = () => {
             name="PricingDashboard" 
             component={PricingDashboardScreen} 
             options={{ title: 'Dashboard de Preços' }} 
+          />
+          <Stack.Screen 
+            name="Notifications" 
+            component={NotificationsScreen} 
+            options={{ title: 'Notificações e Alertas' }} 
+          />
+          <Stack.Screen 
+            name="AIAlerts" 
+            component={AIAlertsScreen} 
+            options={{ title: 'Alertas de IA' }} 
           />
         </Stack.Navigator>
       </NavigationContainer>

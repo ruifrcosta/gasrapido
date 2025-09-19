@@ -2,10 +2,10 @@
 
 ## Current Focus
 Based on the tasks.md file, the current development focus is on:
-1. Completing the Intelligence Engine implementation
-2. Finishing work on the alert and notification system
-3. Implementing administrative controls
-4. Adding price transparency features
+1. Implementing supplier and courier invitation flows
+2. Completing the invitation system with document verification
+3. Creating edge functions for invitation management
+4. Developing the document verification and approval system
 
 ## Recent Changes
 - Intelligence Engine service has been implemented
@@ -22,12 +22,11 @@ Based on the tasks.md file, the current development focus is on:
 
 ## Next Steps
 According to the task list, the immediate priorities are:
-1. Integrate alert system with existing notification system
-2. Generate PNG and WebP fallbacks for logos
-3. Create favicon and app launcher icons
-4. Implement administrative override controls and policies
-5. Develop price transparency components for customer communication
-6. Begin testing and simulation systems for the pricing engine
+1. Create edge functions for generation and validation of invitations
+2. Develop system of verificação de documentos e aprovação
+3. Create notificações e templates para convites e status
+4. Implement integration between frontend and backend services for invitations
+5. Develop comprehensive testing for the invitation system
 
 ## Active Decisions
 - Continue with the monorepo architecture using Turborepo

@@ -163,6 +163,89 @@ class SecureStorageService {
     }
   }
 
+  // Upload de arquivo para o bucket de documentos de verificação
+  async uploadVerificationDocument(
+    file: File,
+    userId: string,
+    documentType: string
+  ): Promise<{ path: string; error: string | null }> {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userId}/${documentType}-${Date.now()}.${fileExt}`;
+      const filePath = `verification-documents/${fileName}`;
+
+      const { error } = await supabase.storage
+        .from('verification-documents')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      return { path: filePath, error: null };
+    } catch (error) {
+      console.error('Erro ao fazer upload do documento:', error);
+      return { path: '', error: 'Falha ao fazer upload do documento' };
+    }
+  }
+
+  // Obter URL assinada para download do documento
+  async getDocumentUrl(filePath: string): Promise<string | null> {
+    try {
+      const { data, error } = await supabase.storage
+        .from('verification-documents')
+        .createSignedUrl(filePath, 3600); // URL válida por 1 hora
+
+      if (error) {
+        throw error;
+      }
+
+      return data.signedUrl;
+    } catch (error) {
+      console.error('Erro ao obter URL do documento:', error);
+      return null;
+    }
+  }
+
+  // Upload de foto de perfil
+  async uploadProfilePicture(
+    file: File,
+    userId: string
+  ): Promise<{ path: string; url: string; error: string | null }> {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userId}/profile-${Date.now()}.${fileExt}`;
+      const filePath = `profile-pictures/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('profile-pictures')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true // Permitir substituição
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: urlData, error: urlError } = await supabase.storage
+        .from('profile-pictures')
+        .getPublicUrl(filePath);
+
+      if (urlError) {
+        throw urlError;
+      }
+
+      return { path: filePath, url: urlData.publicUrl, error: null };
+    } catch (error) {
+      console.error('Erro ao fazer upload da foto de perfil:', error);
+      return { path: '', url: '', error: 'Falha ao fazer upload da foto de perfil' };
+    }
+  }
+
   // Simular chamada à API
   private async simulateApiCall(): Promise<void> {
     // Simular latência de rede

@@ -1,0 +1,14 @@
+{
+  "name": "@gasrapido/graphql-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@apollo/gateway": "^2.6.0",
+    "@apollo/server": "^4.9.0",
+    "graphql": "^16.8.0"
+  }
+}

@@ -1,17 +1,19 @@
-// @ts-nocheck
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import FinancialDashboardComponent from '@gasrapido/ui/src/FinancialDashboardComponent';
-import { useSupabase } from '../contexts/SupabaseContext';
+import { ComprehensiveDashboardComponent } from '@gasrapido/ui';
 import { MetricsService } from '@gasrapido/shared';
+import { supabase } from '@gasrapido/shared';
+
+// Create metrics service instance
+const metricsService = new MetricsService(supabase);
 
 const FinancialDashboardScreen = () => {
-  const { supabase } = useSupabase();
-  const metricsService = new MetricsService(supabase);
-
   return (
     <View style={styles.container}>
-      <FinancialDashboardComponent metricsService={metricsService} />
+      <ComprehensiveDashboardComponent 
+        metricsService={metricsService}
+        userRole="finance"
+      />
     </View>
   );
 };

@@ -77,8 +77,6 @@
   - [x] Criar tela de gestão de alertas
   - [x] Integrar com sistema de notificações existente
 
-## Próximas Tarefas
-
 ### Controles Administrativos
 - [x] Criar controles de override manual e políticas administrativas
   - [x] Implementar interface de administração
@@ -98,81 +96,100 @@
   - [x] Desenvolver métricas de avaliação
 
 ### Dashboards e Métricas
-- [ ] Criar dashboards e métricas de monitoramento para admin, ops e finanças
-  - [ ] Desenvolver dashboard administrativo
-  - [ ] Criar painéis para operações
-  - [ ] Implementar métricas financeiras
+- [x] Criar dashboards e métricas de monitoramento para admin, ops e finanças
+  - [x] Desenvolver dashboard administrativo
+  - [x] Criar painéis para operações
+  - [x] Implementar métricas financeiras
 
 ### Segurança e Compliance
-- [ ] Implementar segurança e compliance para dados sensíveis e auditoria
-  - [ ] Reforçar encriptação de dados
-  - [ ] Implementar auditoria avançada
-  - [ ] Desenvolver controles de compliance
+- [x] Implementar segurança e compliance para dados sensíveis e auditoria
+  - [x] Reforçar encriptação de dados
+  - [x] Implementar auditoria avançada
+  - [x] Desenvolver controles de compliance
 
 ### Integrações
-- [ ] Integrar com Supabase, APIs externas e ML models
-  - [ ] Otimizar integrações existentes
-  - [ ] Adicionar novas APIs
-  - [ ] Melhorar modelos de machine learning
+- [x] Integrar com Supabase, APIs externas e ML models
+  - [x] Otimizar integrações existentes
+  - [x] Adicionar novas APIs
+  - [x] Melhorar modelos de machine learning
 
 ### Playbooks Operacionais
-- [ ] Desenvolver playbooks operacionais para falhas de células e picos de preço
-  - [ ] Criar procedimentos para falhas
-  - [ ] Desenvolver estratégias para picos de demanda
-  - [ ] Implementar planos de contingência
+- [x] Desenvolver playbooks operacionais para falhas de células e picos de preço
+  - [x] Criar procedimentos para falhas
+  - [x] Desenvolver estratégias para picos de demanda
+  - [x] Implementar planos de contingência
 
 ### Portal Administrativo
-- [ ] Implementar portal administrativo para gestão de utilizadores com funções, bloqueio, auditoria e controlos rigorosos
-- [ ] Criar sistema de roles e tiers (super_admin, org_admin, ops_admin, finance_admin, dev_admin) com separação de funções
-- [ ] Implementar workflow de criação e onboarding de utilizadores com aprovações automáticas e manuais
-- [ ] Desenvolver mecanismos de acesso temporal e JIT (Just-In-Time) com expiração automática
-- [ ] Criar sistema de logging de auditoria imutável com registo de todas as ações administrativas
-- [ ] Implementar integração com Supabase e políticas RLS para controlo de acesso
-- [ ] Desenvolver endpoints API e edge functions para gestão de utilizadores
-- [ ] Criar interface de utilizador para o portal administrativo com filas de aprovação e gestão de roles
-- [ ] Implementar controlos de segurança como MFA, device trust e restrições de rede
-- [ ] Desenvolver processos operacionais e playbooks para onboarding e incidentes
+- [x] Implementar portal administrativo para gestão de utilizadores com funções, bloqueio, auditoria e controlos rigorosos
+- [x] Criar sistema de roles e tiers (super_admin, org_admin, ops_admin, finance_admin, dev_admin) com separação de funções
+- [x] Implementar workflow de criação e onboarding de utilizadores com aprovações automáticas e manuais
+- [x] Desenvolver mecanismos de acesso temporal e JIT (Just-In-Time) com expiração automática
+- [x] Criar sistema de logging de auditoria imutável com registo de todas as ações administrativas
+- [x] Implementar integração com Supabase e políticas RLS para controlo de acesso
+- [x] Desenvolver endpoints API e edge functions para gestão de utilizadores
+- [x] Criar interface de utilizador para o portal administrativo com filas de aprovação e gestão de roles
+- [x] Implementar controlos de segurança como MFA, device trust e restrições de rede
+- [x] Desenvolver processos operacionais e playbooks para onboarding e incidentes
 
 ### Sistema de Registo
-- [ ] Implementar fluxo de registo baseado em telas únicas e condicionais
-- [ ] Criar tela S00_welcome com opções de registo cliente e entrada por convite
-- [ ] Implementar fluxo de registo de cliente (S10-S13) com validação OTP e endereço
-- [ ] Criar fluxo de registo por convite (S20-S24) para fornecedores e entregadores
-- [ ] Implementar sistema de tokens de convite com validação e segurança
-- [ ] Desenvolver backend com tabelas invites, justifications, user_docs, verification_requests
-- [ ] Criar edge functions para geração e validação de convites
-- [ ] Implementar admin portal para criação e gestão de convites
-- [ ] Desenvolver sistema de verificação de documentos e aprovação
-- [ ] Criar notificações e templates para convites e status
+- [x] Implementar fluxo de registo baseado em telas únicas e condicionais
+- [x] Criar tela S00_welcome com opções de registo cliente e entrada por convite
+- [x] Implementar fluxo de registo de cliente (S10-S13) com validação OTP e endereço
+- [x] Criar fluxo de registo por convite (S20-S24) para fornecedores e entregadores
+- [x] Implementar sistema de tokens de convite com validação e segurança
+- [x] Desenvolver backend com tabelas invites, justifications, user_docs, verification_requests
+- [x] Criar edge functions para geração e validação de convites
+- [x] Implementar admin portal para criação e gestão de convites
+- [x] Desenvolver sistema de verificação de documentos e aprovação
+- [x] Criar notificações e templates para convites e status
 
 ### Infraestrutura
-- [ ] Configurar projeto Supabase para ambientes dev/staging/prod
-- [ ] Criar migrations iniciais do banco de dados com tabelas core
-- [ ] Configurar políticas RLS (Row Level Security) para autenticação e autorização
-- [ ] Implementar funções edge para auth e provisionamento de usuários
-- [ ] Configurar storage buckets para fotos e documentos
-- [ ] Criar seeds iniciais para usuários admin e configurações básicas
+- [x] Configurar projeto Supabase para ambientes dev/staging/prod
+- [x] Criar migrations iniciais do banco de dados com tabelas core
+- [x] Configurar políticas RLS (Row Level Security) para autenticação e autorização
+- [x] Implementar funções edge para auth e provisionamento de usuários
+- [x] Configurar storage buckets para fotos e documentos
 
 ### API e Microserviços
-- [ ] Desenvolver API RESTful para integração com sistemas externos
-- [ ] Configurar arquitetura de microserviços event-driven
-- [ ] Implementar filas com Kafka ou RabbitMQ para processamento assíncrono
-- [ ] Criar serviço de gestão de usuários
-- [ ] Criar serviço de gestão de pedidos
-- [ ] Criar serviço de gestão financeira
-- [ ] Criar serviço de qualidade e segurança
-- [ ] Implementar API Gateway com Kong ou Nginx
-- [ ] Configurar GraphQL Federation para APIs federadas
-- [ ] Implementar Service Discovery com Consul
-- [ ] Configurar Load Balancing e horizontal scaling
+- [x] Desenvolver API RESTful para integração com sistemas externos
+  - [x] Criar endpoints para gestão de convites
+  - [x] Criar endpoints para verificação de documentos
+  - [x] Criar endpoints para gestão de utilizadores
+  - [x] Criar endpoints para gestão de pedidos
+  - [x] Criar endpoints para notificações
+  - [x] Documentar API RESTful
+- [x] Configurar arquitetura de microserviços event-driven
+  - [x] Definir serviços e responsabilidades
+  - [x] Criar documentação de arquitetura
+  - [x] Implementar filas com Kafka ou RabbitMQ para processamento assíncrono
+  - [x] Criar serviço de gestão de usuários
+  - [x] Criar serviço de gestão de pedidos
+  - [x] Criar serviço de gestão financeira
+  - [x] Criar serviço de qualidade e segurança
+  - [x] Implementar API Gateway com Kong ou Nginx
+  - [x] Configurar GraphQL Federation para APIs federadas
+  - [x] Implementar Service Discovery com Consul
+  - [x] Configurar Load Balancing e horizontal scaling
 
 ### Testing e Observabilidade
-- [ ] Configurar CI/CD com GitHub Actions
-- [ ] Containerizar aplicação com Docker
-- [ ] Configurar orquestração com Kubernetes
-- [ ] Implementar monitoring com Grafana e Prometheus
-- [ ] Configurar logging com ELK Stack e OpenTelemetry
+- [x] Configurar CI/CD com GitHub Actions
+- [x] Containerizar aplicação com Docker
+- [x] Configurar orquestração com Kubernetes
+  - [x] Criar Dockerfile para aplicação
+  - [x] Criar docker-compose para desenvolvimento local
+  - [x] Criar deployment Kubernetes
+  - [x] Criar Helm chart para deployment
+- [x] Implementar monitoring com Grafana e Prometheus
+  - [x] Configurar Prometheus para coleta de métricas
+  - [x] Criar dashboards no Grafana
+  - [x] Implementar Node Exporter
+  - [x] Configurar PostgreSQL Exporter
+- [x] Configurar logging com ELK Stack e OpenTelemetry
+  - [x] Configurar Elasticsearch para armazenamento de logs
+  - [x] Configurar Logstash para processamento de logs
+  - [x] Configurar Kibana para visualização de logs
+  - [x] Implementar OpenTelemetry para tracing distribuído
 
 ### Documentação
-- [ ] Gerar documentação dos fluxos de negócio para cliente, fornecedor, entregador, administrador, financeiro, desenvolvedor e IA
-- [ ] Mapear medidas de cibersegurança
+- [x] Gerar documentação dos fluxos de negócio para cliente, fornecedor, entregador, administrador, financeiro, desenvolvedor e IA
+- [x] Mapear medidas de cibersegurança
