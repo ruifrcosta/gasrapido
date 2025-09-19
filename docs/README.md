@@ -80,6 +80,16 @@ Project context and memory files:
 ### [Ticketing](ticketing/)
 AI Ticketing System documentation
 
+## Project Information
+
+Additional project information and guidelines:
+
+- [Project Summary](PROJECT_SUMMARY.md) - Overview of the GasRápido platform
+- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to the project
+- [Code of Conduct](CODE_OF_CONDUCT.md) - Community guidelines
+- [Security Policy](../SECURITY.md) - Security policies and vulnerability reporting
+- [Changelog](../CHANGELOG.md) - Version history and changes
+
 ## Organization
 
 For details about the documentation organization structure, see [Organization Summary](ORGANIZATION_SUMMARY.md).
