@@ -150,12 +150,20 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="mt-12 text-center animate-fade-in delay-500">
-            <Link
-              href="#inscricao-clientes"
-              className="bg-yellow-400 text-black px-6 py-3 rounded-md text-base font-bold hover:bg-yellow-300 transition-colors duration-200 inline-block"
-            >
-              Peça Agora
-            </Link>
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <Link
+                href="/cliente/marketplace"
+                className="bg-yellow-400 text-black px-6 py-3 rounded-md text-base font-bold hover:bg-yellow-300 transition-colors duration-200 inline-block"
+              >
+                Comprar Agora
+              </Link>
+              <Link
+                href="/cliente/dashboard"
+                className="bg-transparent border border-yellow-400 text-yellow-400 px-6 py-3 rounded-md text-base font-bold hover:bg-yellow-400 hover:text-black transition-colors duration-200 inline-block"
+              >
+                Acessar Dashboard
+              </Link>
+            </div>
           </div>
         </div>
       </section>

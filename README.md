@@ -79,13 +79,39 @@ gasrapido/
 
 3. Set up environment variables:
    ```bash
+   # For development
+   cp .env.example .env.local
+   # Edit .env.local with your development configuration
+   
+   # For production
    cp .env.example .env
-   # Edit .env with your configuration
+   # Edit .env with your production configuration
+   ```
+   
+   📖 **Setup Guides:**
+   - 🚀 **Quick Start:** [docs/setup-guides/QUICK_SETUP_REFERENCE.md](./docs/setup-guides/QUICK_SETUP_REFERENCE.md)
+   - 📋 **Complete Guide:** [docs/COMPLETE_ENVIRONMENT_SETUP_GUIDE.md](./docs/COMPLETE_ENVIRONMENT_SETUP_GUIDE.md)
+   - 🔧 **Environment Summary:** [docs/setup-guides/ENV_CONFIGURATION_SUMMARY.md](./docs/setup-guides/ENV_CONFIGURATION_SUMMARY.md)
+
+4. Validate environment setup:
+   ```bash
+   # Check all services configuration
+   npm run check-services
+   
+   # Validate environment variables
+   npm run validate-env
+   
+   # Complete setup validation
+   npm run setup:env
    ```
 
-4. Start the development environment:
+5. Start the development environment:
    ```bash
+   # Start all services with Docker
    docker-compose up
+   
+   # Or start applications individually
+   npm run dev
    ```
 
 ## 📖 Documentation
@@ -138,24 +164,14 @@ The platform is containerized and ready for production deployment:
 - Helm charts for easy deployment
 - CI/CD pipeline with GitHub Actions
 
-## 🤝 Contributing
-
-We welcome contributions to the GasRápido project! Please see our [Contributing Guidelines](./docs/CONTRIBUTING.md) for more information on how to get started.
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a pull request
-
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is proprietary software. All rights reserved.
 
 ## 🙏 Acknowledgments
 
 - Thanks to all contributors who made this project possible
-- Special thanks to the open-source community for the tools and libraries used
+- Special thanks to the technology providers for the tools and libraries used
 
 ---
 **🎉 PROJECT COMPLETED 🎉**

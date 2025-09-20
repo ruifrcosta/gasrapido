@@ -18,7 +18,12 @@
     "mobile:dev": "npm run dev --workspace=apps/mobile",
     "web:dev": "npm run dev --workspace=apps/web",
     "mobile:build": "npm run build --workspace=apps/mobile",
-    "web:build": "npm run build --workspace=apps/web"
+    "web:build": "npm run build --workspace=apps/web",
+    "validate-env": "node scripts/validate-env.js",
+    "validate-env:connections": "node scripts/validate-env.js --connections",
+    "check-services": "node scripts/check-services.js",
+    "setup:env": "npm run validate-env && npm run check-services",
+    "health-check": "npm run validate-env:connections"
   },
   "devDependencies": {
     "turbo": "^1.10.16",

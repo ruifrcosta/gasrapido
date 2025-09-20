@@ -4,6 +4,21 @@ This directory contains all the documentation for the GasRápido platform, organ
 
 ## Documentation Categories
 
+### [Marketplace](marketplace/)
+Comprehensive documentation for the multi-supplier marketplace functionality:
+- Basic Marketplace Implementation
+- Comprehensive Marketplace Implementation
+- Multi-supplier product listings with reservation support
+- Dynamic pricing engine and commission management
+- Supplier performance tracking and fraud detection
+
+### [Setup Guides](setup-guides/)
+Setup and configuration guides for the platform:
+- Environment Configuration Summary
+- Final Setup Summary
+- Quick Setup Reference
+- Development environment setup
+
 ### [Business Flows](business-flows/)
 Documentation of business processes for different user roles:
 - Client Business Flow
@@ -57,6 +72,7 @@ Documentation for external system integrations:
 - Notification Integration
 - Payment Integration
 - Secrets Management
+- DeepSeek Integration Update
 
 ### [Project Documentation](project-documentation/)
 Project-level documentation organized in subdirectories:
@@ -66,6 +82,14 @@ Project-level documentation organized in subdirectories:
 - Security
 - Ticketing
 - UI/UX
+
+### [Project Completion](project-completion/)
+Project completion documentation and status reports:
+- Implementation Summary
+- Final Implementation Status
+- Final Status Report
+- Project Completion Reports
+- Organization and Planning Summaries
 
 ### [Memory Bank](memory-bank/)
 Project context and memory files:
@@ -82,13 +106,12 @@ AI Ticketing System documentation
 
 ## Project Information
 
-Additional project information and guidelines:
+Additional project information:
 
 - [Project Summary](PROJECT_SUMMARY.md) - Overview of the GasRápido platform
-- [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to the project
-- [Code of Conduct](CODE_OF_CONDUCT.md) - Community guidelines
 - [Security Policy](../SECURITY.md) - Security policies and vulnerability reporting
 - [Changelog](../CHANGELOG.md) - Version history and changes
+- [Software License Summary](SOFTWARE_LICENSE_SUMMARY.md) - Information about the proprietary license
 
 ## Organization
 
